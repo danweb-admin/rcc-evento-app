@@ -1,0 +1,114 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+    
+    <!-- Botão fechar -->
+    <button (click)="fechar()" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+      ✖
+    </button>
+
+    <!-- Tabs -->
+    <div class="flex border-b mb-6">
+      <button 
+        class="px-4 py-2 -mb-px border-b-2" 
+        [ngClass]="selectedTab === 'inscricao' ? 'border-pink-500 text-pink-600 font-bold' : 'border-transparent text-gray-600'"
+        (click)="selectedTab = 'inscricao'">
+        Inscrição
+      </button>
+      <button 
+        class="px-4 py-2 -mb-px border-b-2" 
+        [ngClass]="selectedTab === 'pagamento' ? 'border-pink-500 text-pink-600 font-bold' : 'border-transparent text-gray-600'"
+        (click)="selectedTab = 'pagamento'">
+        Forma de Pagamento
+      </button>
+    </div>
+
+    <!-- Um único form englobando tudo -->
+    <form [formGroup]="inscricaoForm" (ngSubmit)="confirmarPagamento()">
+      
+      <!-- Tab Inscrição -->
+      <div *ngIf="selectedTab === 'inscricao'">
+        <!-- CPF -->
+        <input type="text" placeholder="CPF" formControlName="cpf" 
+          (blur)="validarCpf()" class="w-full border p-2 mb-3 rounded" />
+        
+        <!-- Nome -->
+        <input type="text" placeholder="Nome" formControlName="nome"
+          class="w-full border p-2 mb-3 rounded" />
+        
+        <!-- Email -->
+        <input type="email" placeholder="Email" formControlName="email"
+          class="w-full border p-2 mb-3 rounded" />
+        
+        <!-- Telefone -->
+        <input type="text" placeholder="Telefone" formControlName="telefone"
+          class="w-full border p-2 mb-3 rounded" />
+        
+        <!-- Decanato -->
+        <select formControlName="decanatoId" (change)="carregarGrupos($event)" 
+          class="w-full border p-2 mb-3 rounded">
+          <option value="">Selecione o Decanato</option>
+          <option *ngFor="let d of decanatos" [value]="d.id">{{ d.nome }}</option>
+        </select>
+        
+        <!-- Grupo de Oração -->
+        <select formControlName="grupoOracaoId" class="w-full border p-2 mb-3 rounded">
+          <option value="">Selecione o Grupo de Oração</option>
+          <option *ngFor="let g of grupos" [value]="g.id">{{ g.nome }}</option>
+        </select>
+
+        <button type="button" (click)="selectedTab = 'pagamento'" 
+          class="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 mt-4">
+          Próximo: Forma de Pagamento →
+        </button>
+      </div>
+
+      <!-- Tab Pagamento -->
+      <div *ngIf="selectedTab === 'pagamento'">
+        <h3 class="text-xl font-bold mb-4">Escolha a forma de pagamento</h3>
+
+        <!-- Pix -->
+        <div class="p-4 border rounded-lg mb-4 hover:shadow cursor-pointer"
+          [class.border-pink-500]="formaPagamento === 'pix'"
+          (click)="formaPagamento = 'pix'">
+          <h4 class="font-semibold">Pagamento via Pix</h4>
+          <p class="text-sm text-gray-600">Você receberá um QR Code para pagamento instantâneo.</p>
+        </div>
+
+        <!-- Cartão de Crédito -->
+        <div class="p-4 border rounded-lg hover:shadow cursor-pointer"
+          [class.border-pink-500]="formaPagamento === 'cartao'"
+          (click)="formaPagamento = 'cartao'">
+          <h4 class="font-semibold">Pagamento com Cartão de Crédito</h4>
+          <p class="text-sm text-gray-600">Pague com seu cartão de crédito.</p>
+        </div>
+
+        <!-- Dados do Cartão -->
+        <div *ngIf="formaPagamento === 'cartao'" class="mt-4 space-y-3">
+          <input type="text" placeholder="Número do Cartão" formControlName="numeroCartao"
+            class="w-full border p-2 rounded" />
+          <input type="text" placeholder="Nome no Cartão" formControlName="nomeCartao"
+            class="w-full border p-2 rounded" />
+          <div class="flex gap-2">
+            <input type="text" placeholder="Validade (MM/AA)" formControlName="validade"
+              class="w-1/2 border p-2 rounded" />
+            <input type="text" placeholder="CVV" formControlName="cvv"
+              class="w-1/2 border p-2 rounded" />
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex justify-between mt-6">
+          <button type="button" (click)="selectedTab = 'inscricao'" 
+            class="px-4 py-2 border rounded hover:bg-gray-100">
+            ← Voltar
+          </button>
+          <button type="submit" 
+            class="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

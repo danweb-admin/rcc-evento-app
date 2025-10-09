@@ -1,0 +1,61 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">
+            <i class="bi bi-calendar-event"></i> Eventos
+        </h2>
+        <button class="btn btn-primary" (click)="novo()">
+            <i class="bi bi-plus-circle"></i> Novo Evento
+        </button>
+    </div>
+    
+    <div *ngIf="carregando" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Carregando eventos...</p>
+    </div>
+    
+    <div *ngIf="!carregando && eventos.length > 0" class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data Início</th>
+                    <th>Data Fim</th>
+                    <th>Organizador</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let evento of eventos">
+                    <td>{{ evento.nome }}</td>
+                    <td>{{ evento.dataInicio | date }}</td>
+                    <td>{{ evento.dataFim | date }}</td>
+                    <td>{{ evento.organizadorNome }}</td>
+                    <td>
+                        <span
+                        class="badge"
+                        [ngClass]="{
+                            'bg-secondary': evento.status === 'Criado',
+                            'bg-info': evento.status === 'Em andamento',
+                            'bg-danger': evento.status === 'Cancelado',
+                            'bg-success': evento.status === 'Finalizado'
+                        }"
+                        >
+                        {{ evento.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"
+                        [routerLink]="['/admin/eventos/editar', evento.id]">
+                        ✏️ Editar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div *ngIf="!carregando && eventos.length === 0" class="alert alert-info">
+    Nenhum evento cadastrado.
+</div>
+</div>

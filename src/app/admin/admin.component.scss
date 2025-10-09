@@ -1,0 +1,15 @@
+#wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+#sidebar-wrapper {
+  min-width: 220px;
+  max-width: 220px;
+}
+
+#sidebar-wrapper .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}

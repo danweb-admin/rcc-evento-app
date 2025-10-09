@@ -1,0 +1,259 @@
+<div class="max-w-5xl mx-auto p-6 bg-white shadow rounded">
+    <h2 class="text-2xl font-bold mb-6">{{ titulo }}</h2>
+    
+    <form [formGroup]="eventoForm" (ngSubmit)="salvar()">
+        
+        <!-- Tabs -->
+        <ul class="flex border-b mb-6">
+            <li class="mr-4">
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'dados'"
+                (click)="abaAtiva = 'dados'">Dados do Evento</a>
+            </li>
+            <li class="mr-4">
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'sobre'"
+                (click)="abaAtiva = 'sobre'">Sobre</a>
+            </li>
+            <li class="mr-4">
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'pregadores'"
+                (click)="abaAtiva = 'pregadores'">Pregadores</a>
+            </li>
+            <li>
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'programacao'"
+                (click)="abaAtiva = 'programacao'">Programação</a>
+            </li>
+            <li>
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'local'"
+                (click)="abaAtiva = 'local'">Local</a>
+            </li>
+            <li>
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'informacoesAdicionais'"
+                (click)="abaAtiva = 'informacoesAdicionais'">Informações Adicionais</a>
+            </li>
+            <li>
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'inscricoes'"
+                (click)="abaAtiva = 'inscricoes'">Inscrições</a>
+            </li>
+        </ul>
+        
+        <!-- Aba Dados do Evento -->
+        <div *ngIf="abaAtiva === 'dados'" class="space-y-4">
+            <div>
+                <label class="block font-medium">Nome do Evento</label>
+                <input formControlName="nome" class="border p-2 w-full rounded" />
+            </div>
+            <div>
+                <label class="block font-medium">Slug (URL)</label>
+                <input formControlName="slug" class="border p-2 w-full rounded" readonly />
+            </div>
+            <div>
+                <label class="block font-medium">Banner Imagem </label>
+                <input formControlName="bannerImagem" class="border p-2 w-full rounded" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-medium">Data Início</label>
+                    <input type="date" formControlName="dataInicio" class="border p-2 w-full rounded" />
+                </div>
+                <div>
+                    <label class="block font-medium">Data Fim</label>
+                    <input type="date" formControlName="dataFim" class="border p-2 w-full rounded" />
+                </div>
+            </div>
+            <div>
+                <label class="block font-medium">Organizador</label>
+                <input formControlName="organizadorNome" class="border p-2 w-full rounded" />
+            </div>
+            <div>
+                <label class="block font-medium">E-mail</label>
+                <input type="email" formControlName="organizadorEmail" class="border p-2 w-full rounded" />
+            </div>
+            <div>
+                <label class="block font-medium">Contato</label>
+                <input formControlName="organizadorContato" class="border p-2 w-full rounded" />
+            </div>
+            <div>
+                <label class="block font-medium">Status</label>
+                <select formControlName="status" class="border p-2 w-full rounded">
+                    <option value="Criado">Criado</option>
+                    <option value="Publicado">Publicado</option>
+                </select>
+            </div>
+            <div class="flex flex-col space-y-3 mt-4">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" formControlName="exibirPregadores" />
+                    <span>Exibir seção de Pregadores</span>
+                </label>
+                
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" formControlName="exibirProgramacao" />
+                    <span>Exibir seção de Programação</span>
+                </label>
+                
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" formControlName="exibirInformacoesAdicionais" />
+                    <span>Exibir seção de Informações Adicionais</span>
+                </label>
+            </div>
+            
+        </div>
+        
+        <!-- Aba Sobre -->
+        <div *ngIf="abaAtiva === 'sobre'" formGroupName="sobre">
+            <div>
+                <label class="block font-medium">Título</label>
+                <input formControlName="titulo" class="border p-2 w-full rounded" />
+            </div>
+            <div class="mt-4">
+                <label class="block font-medium">Conteúdo</label>
+                <div formArrayName="conteudo">
+                    <div *ngFor="let c of conteudoSobre.controls; let i = index" class="flex items-center space-x-2 mt-2">
+                        <input [formControlName]="i" class="border p-2 w-full rounded" />
+                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded" (click)="removeConteudoSobre(i)">X</button>
+                    </div>
+                </div>
+                <button type="button" class="mt-3 bg-green-500 text-white px-4 py-2 rounded" (click)="addConteudoSobre()">+ Adicionar Texto</button>
+            </div>
+        </div>
+        
+        <!-- Aba Pregadores -->
+        <div *ngIf="abaAtiva === 'pregadores'" formArrayName="pregadores">
+            <div *ngFor="let p of pregadores.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4">
+                <div>
+                    <label class="block font-medium">Nome</label>
+                    <input formControlName="nome" class="border p-2 w-full rounded" />
+                </div>
+                <div>
+                    <label class="block font-medium">Foto (URL)</label>
+                    <input formControlName="foto" class="border p-2 w-full rounded" />
+                </div>
+                <div>
+                    <label class="block font-medium">Descrição</label>
+                    <textarea formControlName="descricao" class="border p-2 w-full rounded"></textarea>
+                </div>
+                <button type="button" class="mt-2 bg-red-500 text-white px-4 py-1 rounded" (click)="removePregador(i)">Remover</button>
+            </div>
+            <button type="button" class="bg-green-500 text-white px-4 py-2 rounded" (click)="addPregador()">+ Adicionar Pregador</button>
+        </div>
+        
+        <!-- Aba Programação -->
+        <div *ngIf="abaAtiva === 'programacao'" formArrayName="programacao">
+            <div *ngFor="let p of programacao.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4">
+                <div>
+                    <label class="block font-medium">Dia</label>
+                    <input type="date" formControlName="dia" class="border p-2 w-full rounded" />
+                </div>
+                <div>
+                    <label class="block font-medium">Descrição</label>
+                    <input formControlName="descricao" class="border p-2 w-full rounded" />
+                </div>
+                <button type="button" class="mt-2 bg-red-500 text-white px-4 py-1 rounded" (click)="removeProgramacao(i)">Remover</button>
+            </div>
+            <button type="button" class="bg-green-500 text-white px-4 py-2 rounded" (click)="addProgramacao()">+ Adicionar Programação</button>
+        </div>
+        
+        <!-- Aba Local -->
+        <div *ngIf="abaAtiva === 'local'" formGroupName="local" class="space-y-4">
+            <div>
+                <label class="block font-medium">Latitude</label>
+                <input formControlName="latitude" placeholder="Latitude" class="border p-2 w-full rounded" />
+            </div>
+            <div>
+                <label class="block font-medium">Longitude</label>
+                <input formControlName="longitude" placeholder="Longitude" class="border p-2 w-full rounded" />
+            </div>
+            
+            <div>
+                <label class="block font-medium">Endereço</label>
+                <input formControlName="endereco" class="border p-2 w-full rounded" />
+            </div>
+            
+            <div>
+                <label class="block font-medium">Complemento</label>
+                <input formControlName="complemento" class="border p-2 w-full rounded" />
+            </div>
+            
+            <div>
+                <label class="block font-medium">Bairro</label>
+                <input formControlName="bairro" class="border p-2 w-full rounded" />
+            </div>
+            
+            <div class="flex gap-2">
+                <div class="w-1/2">
+                    <label class="block font-medium">Cidade</label>
+                    <input formControlName="cidade" class="border p-2 w-full rounded" />
+                </div>
+                <div class="w-1/2">
+                    <label class="block font-medium">Estado</label>
+                    <input formControlName="estado" class="border p-2 w-full rounded" />
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aba Informações Adicionais -->
+        <div *ngIf="abaAtiva === 'informacoesAdicionais'" formArrayName="informacoesAdicionais">
+            <div class="mt-4">
+                <label class="block font-medium">Conteúdo</label>
+                <div formArrayName="texto">
+                    <div *ngFor="let c of textoInformacoesAdicionais.controls; let i = index" class="flex items-center space-x-2 mt-2">
+                        <input [formControlName]="i" class="border p-2 w-full rounded" />
+                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded" (click)="removeInformacaoAdicional(i)">X</button>
+                    </div>
+                </div>
+                <button type="button" class="mt-3 bg-green-500 text-white px-4 py-2 rounded" (click)="addTextoInformacoesAdicionais()">+ Adicionar Texto</button>
+            </div>
+        </div>
+        
+        <!-- Aba Inscrições -->
+        <div *ngIf="abaAtiva === 'inscricoes'">
+            <h3 class="text-lg font-semibold mb-4">Lista de Inscrições</h3>
+            
+            <div *ngIf="inscricoes.length === 0" class="text-gray-500 italic">
+                Nenhuma inscrição registrada.
+            </div>
+            
+            <table *ngIf="inscricoes.length > 0" class="min-w-full border-collapse border border-gray-300">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border p-2 text-left">Nome</th>
+                        <th class="border p-2 text-left">CPF</th>
+                        <th class="border p-2 text-left">Telefone</th>
+                        <th class="border p-2 text-left">Grupo de Oração</th>
+                        <th class="border p-2 text-left">Decanato</th>
+                        <th class="border p-2 text-left">Pagamento</th>
+                        <th class="border p-2 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of inscricoes">
+                        <td class="border p-2">{{ i.nome }}</td>
+                        <td class="border p-2">{{ i.cpf }}</td>
+                        <td class="border p-2">{{ i.telefone }}</td>
+                        <td class="border p-2">{{ i.grupoOracao }}</td>
+                        <td class="border p-2">{{ i.decanato }}</td>
+                        <td class="border p-2">{{ i.tipoPagamento }}</td>
+                        <td class="border p-2">
+                            <span [ngClass]="{
+                                'text-green-600 font-semibold': i.status === 'Confirmado',
+                                'text-yellow-600 font-semibold': i.status === 'Pendente'
+                            }">{{ i.status }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        
+        <!-- Botões -->
+        <div class="flex justify-end space-x-4 mt-6">
+            <button type="button" class="px-6 py-2 bg-gray-400 text-white rounded" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="px-6 py-2 bg-pink-600 text-white rounded">Salvar</button>
+        </div>
+    </form>
+</div>

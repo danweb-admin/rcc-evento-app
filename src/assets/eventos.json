@@ -1,0 +1,118 @@
+[
+    {
+        "id": 1,
+        "nome": "Congresso Jovem 2025",
+        "slug": "congresso-jovem-2025",
+        "bannerImagem": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/cover/1739820971_a8c6d264-05a4-48b4-8609-c13b108285a7.png",
+        "dataInicio": "2025-09-22",
+        "dataFim": "2025-09-25",
+        "organizadorNome": "Pe. João Silva",
+        "organizadorEmail": "joao.silva@paroquia.com",
+        "organizadorContato": "(11) 99999-1234",
+        "status": "Criado",
+        "exibirPregadores": true,
+        "exibirProgramacao": true,
+        "exibirInformacoesAdicionais": true,
+        "sobre": {
+            "titulo": "Sobre",
+            "conteudo": [
+                "O Congresso Querigmático Online da RCC Londrina é um convite para aprofundarmos nossa experiência pessoal com o Amor de Deus, por meio do anúncio da Palavra e do Batismo no Espírito Santo.",
+                "Podem participar todas as pessoas que já têm uma caminhada na Igreja ou aquelas que buscam uma experiência espiritual com Deus através da Renovação Carismática Católica."
+            ]
+        },
+        "local": {
+            "imagemMapa": "https://maps.googleapis.com/maps/api/staticmap?center=Londrina,PR&zoom=14&size=600x300&key=AIzaSyBiB1ZZA55k0oFE1YHdOQY97PJdnySE_Mw",
+            "latitude": -23.3103,
+            "longitude": -51.1628,
+            "endereco": "Rua das Flores, 123",
+            "complemento": "Salão Paroquial",
+            "bairro": "Centro",
+            "cidade": "Londrina",
+            "estado": "PR"
+        },
+        "informacoesAdicionais": {
+            "texto": [
+                "Levar Bíblia e terço.",
+                "Haverá espaço para confissões durante o evento.",
+                "😅😅😅😅"
+            ]
+        },
+        
+        "pregadores": [
+            { "id": 1, "nome": "Ademir José", "foto": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/speakers_or_bands_photo/thumb_1598457015_b579a1fc-133c-42a3-aba7-0dc249d2c57e.jpeg", "descricao": "Especialista em missões." },
+            { "id": 2, "nome": "Maria do Santos", "foto": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/speakers_or_bands_photo/thumb_1598456914_72cf98f0-7aac-408e-a08a-77f560138836.jpeg", "descricao": "Teólogo e pregador internacional." },
+            { "id": 3, "nome": "Wesley Martins", "foto": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/speakers_or_bands_photo/thumb_1598457501_09dadded-b4cf-47cc-9c5e-b3a9d6e04a40.jpeg", "descricao": "Coordenador da RCC." },
+            { "id": 4, "nome": "Edson da Silva", "foto": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/speakers_or_bands_photo/thumb_1598457501_09dadded-b4cf-47cc-9c5e-b3a9d6e04a40.jpeg", "descricao": "Coordenador da RCC." }
+            
+        ],
+        "programacao": [
+            { "dia": "22/09/2025", "descricao": "Abertura e Missa - 19h" },
+            { "dia": "23/09/2025", "descricao": "Louvor e Pregações - 09h às 18h" },
+            { "dia": "24/09/2025", "descricao": "Adoração e Santa Missa - 19h" }
+        ],
+        "inscricoes": [
+            {
+                "nome": "João Pereira",
+                "cpf": "123.456.789-00",
+                "telefone": "(43) 98888-7777",
+                "grupoOracao": "Jovens de Fogo",
+                "decanato": "Londrina Centro",
+                "tipoPagamento": "Pix",
+                "status": "Confirmado"
+            },
+            {
+                "nome": "Ana Souza",
+                "cpf": "987.654.321-00",
+                "telefone": "(43) 97777-6666",
+                "grupoOracao": "Renovados no Espírito",
+                "decanato": "Londrina Sul",
+                "tipoPagamento": "Cartão",
+                "status": "Pendente"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "nome": "Encontro Nacional de Líderes 2025",
+        "slug": "encontro-nacional-lideres-2025",
+        "organizadorNome": "Federação Nacional de Líderes",
+        "bannerImagem": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/cover/1598270490_1a754f60-8723-44f0-bf26-b7d427a12c8c.jpeg",
+        "organizadorEmail": "lideres@federacao.org",
+        "organizadorContato": "(21) 3344-5566",
+        "dataInicio": "2025-08-05",
+        "dataFim": "2025-08-08",
+        "status": "Finalizado",
+        "sections": [
+            {
+                "titulo": "Objetivo",
+                "conteudoJson": "{ \"texto\": \"Fortalecer a atuação de líderes comunitários através de palestras e networking.\" }"
+            },
+            {
+                "titulo": "Temas principais",
+                "conteudoJson": "{ \"1\": \"Gestão de equipes\", \"2\": \"Liderança transformadora\", \"3\": \"Sustentabilidade\" }"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "nome": "Fórum de Tecnologia Cristã",
+        "slug": "forum-tecnologia-crista",
+        "bannerImagem": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/cover/1733883498_80017546-0f99-4ade-8204-285558153c1c.png",
+        "organizadorNome": "Tech4Christ",
+        "organizadorEmail": "forum@tech4christ.org",
+        "organizadorContato": "(31) 99887-6655",
+        "dataInicio": "2025-03-15",
+        "dataFim": "2025-03-17",
+        "status": "Em andamento",
+        "sections": [
+            {
+                "titulo": "Visão Geral",
+                "conteudoJson": "{ \"texto\": \"Discussões sobre o uso da tecnologia no crescimento e apoio às comunidades cristãs.\" }"
+            },
+            {
+                "titulo": "Palestrantes",
+                "conteudoJson": "{ \"1\": \"Pr. João Silva - Inteligência Artificial e Fé\", \"2\": \"Maria Santos - Segurança Digital\", \"3\": \"Carlos Almeida - Mídias Sociais\" }"
+            }
+        ]
+    }
+]

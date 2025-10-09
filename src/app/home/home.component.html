@@ -1,0 +1,47 @@
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-pink-700">RCC Londrina</h1>
+    <button class="md:hidden text-gray-700" (click)="menuAberto = !menuAberto">
+      <i class="fa fa-bars text-2xl"></i>
+    </button>
+    <nav class="hidden md:flex space-x-6">
+      
+    </nav>
+  </div>
+
+  <!-- Menu Mobile -->
+  <div *ngIf="menuAberto" class="bg-pink-50 md:hidden border-t border-pink-100">
+    <nav class="flex flex-col space-y-2 py-3 px-4">
+      
+    </nav>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="pt-28 pb-12 bg-gradient-to-r from-pink-100 via-white to-pink-50 text-center">
+  <h1 class="text-4xl font-extrabold text-gray-800 mb-3">Próximos Eventos</h1>
+</section>
+
+<!-- Cards Section -->
+<section class="max-w-7xl mx-auto px-4 py-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+  <div
+    *ngFor="let evento of eventos"
+    class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-transform transform hover:-translate-y-2"
+  >
+    <img [src]="evento.bannerImagem" alt="Imagem do evento" class="w-full h-48 object-cover" />
+    <div class="p-5 flex flex-col h-full">
+      <h2 class="text-xl font-bold text-gray-800 mb-2">{{ evento.nome }}</h2>
+      <span class="font-semibold text-gray-700">Organizador: {{ evento.organizadorNome }} </span>
+      <button
+        class="mt-4 bg-pink-600 hover:bg-pink-700 text-white w-full py-2 rounded-lg font-semibold transition" (click)="abrirEvento(evento.slug)">
+        Ver mais
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 text-center py-6 mt-10">
+  <p>&copy; 2025 RCC Londrina - Todos os direitos reservados</p>
+</footer>
