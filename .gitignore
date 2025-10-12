@@ -4,6 +4,7 @@ dist/
 tmp/
 *.log
 *.tgz
+.angular/
 
 # Environment files
 .env
