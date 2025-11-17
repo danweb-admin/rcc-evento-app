@@ -21,8 +21,10 @@ export class EventoLandingComponent implements OnInit {
   grupos: any[] = [];
   wazeUrl!: SafeResourceUrl;
   menuAberto = false;
-  
-  
+  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos';
+  fotoUrl = 'https://res.cloudinary.com/dgcpvxvcj/image/upload/v1761264849/Fotos%20Eventos/marcao.jpg';
+
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -35,7 +37,7 @@ export class EventoLandingComponent implements OnInit {
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug');
     
-    this.http.get<any[]>('assets/eventos.json').subscribe(eventos => {
+    this.http.get<any[]>(this.baseUrl).subscribe(eventos => {
       this.evento = eventos.find(e => e.slug === slug);
       this.gerarMapaWaze();
     }); 
@@ -59,8 +61,11 @@ export class EventoLandingComponent implements OnInit {
   fecharModal() {
     this.showModal = false;
   }
-  
-  
-  
+
+  formatarData(data: string | Date): string | null {
+    if (!data) return null;
+    const d = new Date(data);
+    return d.toISOString().split('T')[0]; // retorna yyyy-MM-dd
+  }
   
 }

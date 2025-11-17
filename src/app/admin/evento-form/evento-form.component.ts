@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EventoService } from '../services/eventos.service';
+import { ToastrService } from 'ngx-toastr';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-evento-form',
@@ -10,19 +13,36 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class EventoFormComponent implements OnInit {
   eventoForm!: FormGroup;
   titulo = 'Novo Evento';
-  abaAtiva = 'dados'
+  abaAtiva = 'dados';
   inscricoes: any[] = [];
+  eventoId: string | null = null;
+  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos';
+  
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '300px',
+    minHeight: '0',
+    placeholder: 'Digite o conteúdo sobre o evento...',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    toolbarHiddenButtons: [
+      ['insertVideo', 'toggleEditorMode']
+    ]
+  };
   
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
-    
+    private eventoService: EventoService,
+    private toastr: ToastrService
   ) {}
   
   ngOnInit(): void {
     this.eventoForm = this.fb.group({
+      id: [null],
       nome: ['', Validators.required],
       slug: [''],
       dataInicio: ['', Validators.required],
@@ -32,11 +52,9 @@ export class EventoFormComponent implements OnInit {
       organizadorContato: ['', Validators.required],
       bannerImagem: ['', Validators.required],
       status: ['Criado', Validators.required],
-      sobre: this.fb.group({
-        titulo: ['Sobre', Validators.required],
-        conteudo: this.fb.array([])
-      }),
       local: this.fb.group({
+        id: [null],
+        eventoId: [null],
         latitude: [''],
         longitude: [''],
         endereco: [''],
@@ -45,53 +63,69 @@ export class EventoFormComponent implements OnInit {
         cidade: [''],
         estado: ['']
       }),
-      pregadores: this.fb.array([]),
-      programacao: this.fb.array([]),
-      informacoesAdicionais: this.fb.group({
-        texto: this.fb.array([])
+      sobre: this.fb.group({
+        id: [null],
+        eventoId: [null],
+        conteudo: ['']
       }),
+      informacoesAdicionais: this.fb.group({
+        id: [null],
+        eventoId: [null],
+        texto: ['']
+      }),
+      participacoes: this.fb.array([]),
+      programacao: this.fb.array([]),
       exibirPregadores: [true],
       exibirProgramacao: [true],
-      exibirInformacoesAdicionais: [true]
-      
+      exibirInformacoesAdicionais: [true],
+      lotesInscricoes: this.fb.array([])
     });
     
-    // slug automático
+    // Slug automático
     this.eventoForm.get('nome')?.valueChanges.subscribe((nome: string) => {
       this.eventoForm.patchValue({
         slug: this.slugify(nome)
       }, { emitEvent: false });
     });
     
-    // se for edição
+    // Edição
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.eventoId = id;
       this.titulo = 'Editar Evento';
       this.loadEvento(id);
     }
   }
   
   // -------- SOBRE --------
-  get conteudoSobre(): FormArray {
-    return this.eventoForm.get('sobre.conteudo') as FormArray;
+  get sobre(): FormArray {
+    return this.eventoForm.get('sobre') as FormArray;
   }
   
-  addConteudoSobre(valor: string = '') {
-    this.conteudoSobre.push(this.fb.control(valor, Validators.required));
+  addSobre(item: any = { id: null, eventoId: this.eventoId, conteudo: '' }) {
+    this.sobre.push(
+      this.fb.group({
+        id: [item.id],
+        eventoId: [item.eventoId],
+        conteudo: [item.conteudo, Validators.required]
+      })
+    );
   }
   
-  removeConteudoSobre(i: number) {
-    this.conteudoSobre.removeAt(i);
+  removeSobre(i: number) {
+    this.sobre.removeAt(i);
   }
   
   // -------- PREGADORES --------
-  get pregadores(): FormArray {
-    return this.eventoForm.get('pregadores') as FormArray;
+  get participacoes(): FormArray {
+    return this.eventoForm.get('participacoes') as FormArray;
   }
   
-  addPregador(p: any = { nome: '', foto: '', descricao: '' }) {
-    this.pregadores.push(
+  addPregador(p: any = { id: null, eventoId: this.eventoId, nome: '', foto: '', descricao: '' }) {
+    this.participacoes.push(
       this.fb.group({
+        id: [p.id],
+        eventoId: [p.eventoId],
         nome: [p.nome, Validators.required],
         foto: [p.foto, Validators.required],
         descricao: [p.descricao || '']
@@ -100,7 +134,7 @@ export class EventoFormComponent implements OnInit {
   }
   
   removePregador(i: number) {
-    this.pregadores.removeAt(i);
+    this.participacoes.removeAt(i);
   }
   
   // -------- PROGRAMAÇÃO --------
@@ -108,56 +142,83 @@ export class EventoFormComponent implements OnInit {
     return this.eventoForm.get('programacao') as FormArray;
   }
   
-  addProgramacao(item: any = { dia: '', descricao: '' }) {
+  addProgramacao(item: any = { id: null, eventoId: this.eventoId, dia: '', descricao: '' }) {
+    
     this.programacao.push(
       this.fb.group({
+        id: [item.id],
+        eventoId: [item.eventoId],
         dia: [item.dia, Validators.required],
         descricao: [item.descricao, Validators.required]
       })
     );
   }
   
-  // -------- INFORMACOES ADICIONAIS --------
-  get textoInformacoesAdicionais(): FormArray {
-    return this.eventoForm.get('informacoesAdicionais.texto') as FormArray;
-  }
-  
-  addTextoInformacoesAdicionais(valor: string = '') {
-    this.textoInformacoesAdicionais.push(this.fb.control(valor, Validators.required));
-  }
-  
-  removeInformacaoAdicional(i: number) {
-    this.textoInformacoesAdicionais.removeAt(i);
-  }
-  
   removeProgramacao(i: number) {
     this.programacao.removeAt(i);
   }
   
-  getConteudoSobre(): FormArray {
-    return this.eventoForm.get('sobre.conteudo') as FormArray;
+  // -------- INFORMAÇÕES ADICIONAIS --------
+  get informacoesAdicionais(): FormArray {
+    return this.eventoForm.get('informacoesAdicionais') as FormArray;
   }
   
-  getPregadores(): FormArray {
-    return this.eventoForm.get('pregadores') as FormArray;
+  addInformacoesAdicionais(item: any = { id: null, eventoId: this.eventoId, texto: '' }) {
+    this.informacoesAdicionais.push(
+      this.fb.group({
+        id: [item.id],
+        eventoId: [item.eventoId],
+        texto: [item.texto, Validators.required]
+      })
+    );
   }
   
-  getProgramacao(): FormArray {
-    return this.eventoForm.get('programacao') as FormArray;
+  removeInformacaoAdicional(i: number) {
+    this.informacoesAdicionais.removeAt(i);
   }
   
-  getTextoInformacoesAdicionais(): FormArray {
-    return this.eventoForm.get('informacoesAdicionais.texto') as FormArray;
+  // ---------- LOTES ----------
+  get lotesInscricoes(): FormArray {
+    return this.eventoForm.get('lotesInscricoes') as FormArray;
   }
   
+  addLote(lote: any = { id: null, eventoId: this.eventoId, nome: '', dataInicio: '', dataFim: '', valor: 0 }) {
+    const loteGroup = this.fb.group({
+      id: [lote.id],
+      eventoId: [lote.eventoId],
+      nome: [lote.nome, Validators.required],
+      dataInicio: [this.formatarData(lote.dataInicio), Validators.required],
+      dataFim: [this.formatarData(lote.dataFim), Validators.required],
+      valor: [lote.valor, [Validators.required, Validators.min(0)]]
+    });
+    this.lotesInscricoes.push(loteGroup);
+  }
   
+  removeLote(index: number) {
+    this.lotesInscricoes.removeAt(index);
+  }
   
-  // -------- MOCK DE EDIÇÃO --------
+  // ---------- GETTERS ----------
+  getSobre(): FormArray { 
+    return this.eventoForm.get('sobre') as FormArray; 
+  } 
+  
+  getPregadores(): FormArray { 
+    return this.eventoForm.get('participacoes') as FormArray; 
+  } 
+  
+  getProgramacao(): FormArray { 
+    return this.eventoForm.get('programacao') as FormArray; 
+  } 
+  
+  getInformacoesAdicionais(): FormArray { 
+    return this.eventoForm.get('informacoesAdicionais') as FormArray; 
+  }
+  
   loadEvento(id: string) {
-    this.http.get<any>('assets/eventos.json').subscribe({
+    this.eventoService.getById(id).subscribe({
       next: (dados: any[]) => {
-        // se o JSON contiver vários eventos, filtra
-        const evento = Array.isArray(dados) 
+        const evento = Array.isArray(dados)
         ? dados.find(e => e.id == id)
         : dados;
         
@@ -166,39 +227,38 @@ export class EventoFormComponent implements OnInit {
           return;
         }
         
-        // Preenche campos simples
         this.eventoForm.patchValue({
+          id: evento.id,
           nome: evento.nome,
           slug: evento.slug,
           bannerImagem: evento.bannerImagem,
-          dataInicio: evento.dataInicio,
-          dataFim: evento.dataFim,
+          dataInicio: this.formatarData(evento.dataInicio),
+          dataFim: this.formatarData(evento.dataFim),
           organizadorNome: evento.organizadorNome,
           organizadorEmail: evento.organizadorEmail,
           organizadorContato: evento.organizadorContato,
           status: evento.status,
-          sobre: {
-            titulo: evento.sobre?.titulo
-          },
           local: evento.local || {},
+          sobre: evento.sobre || {},
+          informacoesAdicionais: evento.informacoesAdicionais || {},
+
           exibirPregadores: evento.exibirPregadores,
           exibirProgramacao: evento.exibirProgramacao,
           exibirInformacoesAdicionais: evento.exibirInformacoesAdicionais
         });
         
-        // limpa arrays
-        this.getConteudoSobre().clear();
+        // this.getSobre().clear();
         this.getPregadores().clear();
         this.getProgramacao().clear();
-        this.getTextoInformacoesAdicionais().clear();
-        this.inscricoes = evento.inscricoes || [];
-
+        // this.getInformacoesAdicionais().clear();
+        this.lotesInscricoes.clear();
         
-        // popula arrays
-        (evento.sobre?.conteudo || []).forEach((c: string | undefined) => this.addConteudoSobre(c));
-        (evento.pregadores || []).forEach((p: any) => this.addPregador(p));
+        this.inscricoes = evento.inscricoes || [];
+        
+        // (evento.sobre || []).forEach((p: any) => this.addSobre(p));
+        (evento.participacoes || []).forEach((p: any) => this.addPregador(p));
         (evento.programacao || []).forEach((p: any) => this.addProgramacao(p));
-        (evento.informacoesAdicionais?.texto || []).forEach((info: string | undefined) => this.addTextoInformacoesAdicionais(info));
+        (evento.lotesInscricoes || []).forEach((p: any) => this.addLote(p));
       },
       error: (err) => {
         console.error('Erro ao carregar evento:', err);
@@ -207,16 +267,69 @@ export class EventoFormComponent implements OnInit {
   }
   
   salvar() {
+    this.mostrarCamposInvalidos(this.eventoForm);
+    
     if (this.eventoForm.valid) {
-      console.log('Evento salvo:', this.eventoForm.value);
-      this.router.navigate(['/admin/eventos']);
+      const evento = this.eventoForm.value;
+      
+      if (evento.id === "" || evento.id === null ){
+        this.eventoService.save(evento).subscribe((resp: any) => {
+          this.toastr.success('Evento adicionado com sucesso.');
+          this.router.navigate(['/admin/eventos']);
+        },
+        (error: any) =>{
+          console.log(error);
+          this.toastr.warning(error.error?.message)
+          this.router.navigate(['/admin/eventos']);
+        });
+      } else {
+        this.eventoService.update(evento).subscribe((resp: any) => {
+          
+          this.toastr.success('Evento atualizado com sucesso.');
+          this.router.navigate(['/admin/eventos']);
+        },
+        (error: any) =>{
+          console.log(error);
+          this.toastr.warning(error.error?.message)
+          this.router.navigate(['/admin/eventos']);
+        });
+      }
+       
     } else {
       this.eventoForm.markAllAsTouched();
     }
   }
   
+  verificaCamposRequeridos(formGroup: FormGroup) {
+    Object.keys(this.eventoForm.controls).forEach(campo => {
+      const controle = this.eventoForm.get(campo);
+      if (controle && controle.invalid) {
+        console.log(`❌ Campo inválido: ${campo}`, controle.errors);
+      }
+    });
+  }
+  
+  mostrarCamposInvalidos(formGroup: FormGroup | FormArray, caminho: string = '') {
+    Object.keys(formGroup.controls).forEach(chave => {
+      const controle = formGroup.get(chave);
+      const novoCaminho = caminho ? `${caminho}.${chave}` : chave;
+      
+      if (controle instanceof FormGroup || controle instanceof FormArray) {
+        this.mostrarCamposInvalidos(controle, novoCaminho);
+      } else if (controle?.invalid) {
+        console.warn(`❌ Campo inválido: ${novoCaminho}`, controle.errors);
+      }
+    });
+  }
+  
   cancelar() {
     this.router.navigate(['/admin/eventos']);
+  }
+  
+  formatarData(data: string | Date): string | null {
+    if (!data) return null;
+    const d = new Date(data);
+    return d.toISOString().split('T')[0]; // retorna yyyy-MM-dd
   }
   
   private slugify(text: string): string {

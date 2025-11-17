@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   eventos: any[] = [];
   menuAberto = false;
+  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos';
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('/assets/eventos.json').subscribe(data => {
+    this.http.get<any[]>(this.baseUrl).subscribe(data => {
       this.eventos = data;
     });
   }

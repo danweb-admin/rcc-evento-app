@@ -1,0 +1,122 @@
+/* ====== FORMULÁRIO DE INSCRIÇÃO ====== */
+
+.readonly-select {
+  pointer-events: none; /* bloqueia clique sem desabilitar o select */
+  background-color: #f9fafb; /* leve cinza para parecer readonly */
+  color: #6b7280; /* cor de texto cinza */
+  border-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* ====== FORMAS DE PAGAMENTO ====== */
+
+.pagamento-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+
+  h4 {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  p {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+
+  &:hover {
+    border-color: #f472b6; /* rosa claro no hover */
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
+  }
+
+  &.selected {
+    border-color: #ec4899; /* rosa principal */
+    background-color: #fdf2f8;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+  }
+}
+
+/* ====== BOTÕES ====== */
+
+button[type="submit"] {
+  transition: background-color 0.2s;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ====== TÍTULOS E VALOR ====== */
+
+.valor-inscricao {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  span {
+    font-size: 1.2rem;
+    color: #ec4899;
+    font-weight: 600;
+  }
+}
+
+.qrcode-png {
+    width: 150px;
+    // margin-left: 25%;
+}
+
+.pix-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 350px;
+  // margin-left: 25%;
+  text-align: center;
+}
+
+.codigo {
+  font-size: 14px;
+  word-break: break-all;
+  background: #f2f2f2;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.btn-copiar {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-copiar:hover {
+  background-color: #45a049;
+}
+
+.alert-sucesso {
+  background-color: #e6ffe6;
+  color: #2e7d32;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid #b6e6b6;
+}
+
+
+/* ====== MODAL RESPONSIVO ====== */
+
+@media (max-width: 640px) {
+  .max-w-2xl {
+    max-width: 95%;
+  }
+}
+
+

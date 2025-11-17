@@ -7,6 +7,7 @@ import { SectionFormComponent } from './section-form/section-form.component';
 import { SectionListComponent } from './section-list/ section-list.component';
 import { EventoFormComponent } from './evento-form/evento-form.component';
 import { EventoListComponent } from './evento-list/evento-list.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { EventoListComponent } from './evento-list/evento-list.component';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    AngularEditorModule
   ]
 })
 export class AdminModule {}

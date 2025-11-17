@@ -5,6 +5,7 @@ import { LandingRoutingModule } from './landing-routing.module';
 import { EventoLandingComponent } from './evento-landing/evento-landing.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InscricaoDialogComponent } from './inscricao-dialog/inscricao-dialog.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { InscricaoDialogComponent } from './inscricao-dialog/inscricao-dialog.co
   imports: [
     CommonModule,
     LandingRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskModule.forChild(),
   ]
 })
 export class LandingModule { }

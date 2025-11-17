@@ -13,13 +13,11 @@
         "exibirPregadores": true,
         "exibirProgramacao": true,
         "exibirInformacoesAdicionais": true,
-        "sobre": {
-            "titulo": "Sobre",
-            "conteudo": [
-                "O Congresso Querigmático Online da RCC Londrina é um convite para aprofundarmos nossa experiência pessoal com o Amor de Deus, por meio do anúncio da Palavra e do Batismo no Espírito Santo.",
-                "Podem participar todas as pessoas que já têm uma caminhada na Igreja ou aquelas que buscam uma experiência espiritual com Deus através da Renovação Carismática Católica."
-            ]
-        },
+        "sobre": [
+            { "conteudo":  "O Congresso Querigmático Online da RCC Londrina é um convite para aprofundarmos nossa experiência pessoal com o Amor de Deus, por meio do anúncio da Palavra e do Batismo no Espírito Santo."},
+            {"conteudo": "Podem participar todas as pessoas que já têm uma caminhada na Igreja ou aquelas que buscam uma experiência espiritual com Deus através da Renovação Carismática Católica."}
+            
+        ],
         "local": {
             "imagemMapa": "https://maps.googleapis.com/maps/api/staticmap?center=Londrina,PR&zoom=14&size=600x300&key=AIzaSyBiB1ZZA55k0oFE1YHdOQY97PJdnySE_Mw",
             "latitude": -23.3103,
@@ -30,13 +28,11 @@
             "cidade": "Londrina",
             "estado": "PR"
         },
-        "informacoesAdicionais": {
-            "texto": [
-                "Levar Bíblia e terço.",
-                "Haverá espaço para confissões durante o evento.",
-                "😅😅😅😅"
-            ]
-        },
+        "informacoesAdicionais": [
+            { "texto": "Levar Bíblia e terço."},
+            {"texto": "Haverá espaço para confissões durante o evento."},
+            {"texto": "😅😅😅😅"}
+        ],
         
         "pregadores": [
             { "id": 1, "nome": "Ademir José", "foto": "https://wasabi.e-inscricao.com/uploads/hotsite/v2/speakers_or_bands_photo/thumb_1598457015_b579a1fc-133c-42a3-aba7-0dc249d2c57e.jpeg", "descricao": "Especialista em missões." },
@@ -49,6 +45,10 @@
             { "dia": "22/09/2025", "descricao": "Abertura e Missa - 19h" },
             { "dia": "23/09/2025", "descricao": "Louvor e Pregações - 09h às 18h" },
             { "dia": "24/09/2025", "descricao": "Adoração e Santa Missa - 19h" }
+        ],
+        "lotesInscricao": [
+            { "nome": "1º Lote", "dataInicio": "2025-10-01", "dataFim": "2025-10-10", "valor": 100 },
+            { "nome": "2º Lote", "dataInicio": "2025-10-11", "dataFim": "2025-10-15", "valor": 120 }
         ],
         "inscricoes": [
             {

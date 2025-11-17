@@ -1,0 +1,19 @@
+.sobre-conteudo, .informacoes-conteudo {
+  text-align: left !important; /* alinhamento padrão à esquerda */
+
+  /* Permite que os estilos inline do editor (ex: text-align:center) funcionem */
+  *[style*="text-align"] {
+    text-align: inherit !important;
+  }
+
+  /* Melhora a legibilidade */
+  line-height: 1.6;
+  word-break: break-word;
+
+  /* Garante que imagens e ícones fiquem alinhados */
+  img, svg, i {
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+  }
+}

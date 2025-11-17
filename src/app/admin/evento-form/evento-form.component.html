@@ -17,11 +17,15 @@
             </li>
             <li class="mr-4">
                 <a class="cursor-pointer py-2 px-4 block"
+                [class.text-gray-400]="!eventoForm.get('exibirPregadores')?.value"
+                [class.pointer-events-none]="!eventoForm.get('exibirPregadores')?.value"
                 [class.border-b-2]="abaAtiva === 'pregadores'"
                 (click)="abaAtiva = 'pregadores'">Pregadores</a>
             </li>
             <li>
                 <a class="cursor-pointer py-2 px-4 block"
+                [class.text-gray-400]="!eventoForm.get('exibirProgramacao')?.value"
+                [class.pointer-events-none]="!eventoForm.get('exibirProgramacao')?.value"
                 [class.border-b-2]="abaAtiva === 'programacao'"
                 (click)="abaAtiva = 'programacao'">Programação</a>
             </li>
@@ -32,8 +36,15 @@
             </li>
             <li>
                 <a class="cursor-pointer py-2 px-4 block"
+                [class.text-gray-400]="!eventoForm.get('exibirInformacoesAdicionais')?.value"
+                [class.pointer-events-none]="!eventoForm.get('exibirInformacoesAdicionais')?.value"
                 [class.border-b-2]="abaAtiva === 'informacoesAdicionais'"
                 (click)="abaAtiva = 'informacoesAdicionais'">Informações Adicionais</a>
+            </li>
+            <li class="mr-4">
+                <a class="cursor-pointer py-2 px-4 block"
+                [class.border-b-2]="abaAtiva === 'lotes'"
+                (click)="abaAtiva = 'lotes'">Lotes de Inscrição</a>
             </li>
             <li>
                 <a class="cursor-pointer py-2 px-4 block"
@@ -105,26 +116,23 @@
         </div>
         
         <!-- Aba Sobre -->
-        <div *ngIf="abaAtiva === 'sobre'" formGroupName="sobre">
-            <div>
-                <label class="block font-medium">Título</label>
-                <input formControlName="titulo" class="border p-2 w-full rounded" />
-            </div>
-            <div class="mt-4">
-                <label class="block font-medium">Conteúdo</label>
-                <div formArrayName="conteudo">
-                    <div *ngFor="let c of conteudoSobre.controls; let i = index" class="flex items-center space-x-2 mt-2">
-                        <input [formControlName]="i" class="border p-2 w-full rounded" />
-                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded" (click)="removeConteudoSobre(i)">X</button>
-                    </div>
-                </div>
-                <button type="button" class="mt-3 bg-green-500 text-white px-4 py-2 rounded" (click)="addConteudoSobre()">+ Adicionar Texto</button>
+        <div *ngIf="abaAtiva === 'sobre'" [formGroup]="eventoForm">
+            <div formGroupName="sobre" class="mt-4">
+                <label class="block font-medium text-lg mb-2">Conteúdo HTML</label>
+                
+                <angular-editor
+                formControlName="conteudo"
+                [config]="editorConfig"
+                class="w-full"
+                ></angular-editor>
             </div>
         </div>
         
         <!-- Aba Pregadores -->
-        <div *ngIf="abaAtiva === 'pregadores'" formArrayName="pregadores">
-            <div *ngFor="let p of pregadores.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4">
+        <div *ngIf="abaAtiva === 'pregadores'" formArrayName="participacoes">
+            <div *ngFor="let p of participacoes.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4">
+                <input type="hidden" formControlName="id" />
+                <input type="hidden" formControlName="eventoId" />
                 <div>
                     <label class="block font-medium">Nome</label>
                     <input formControlName="nome" class="border p-2 w-full rounded" />
@@ -145,9 +153,11 @@
         <!-- Aba Programação -->
         <div *ngIf="abaAtiva === 'programacao'" formArrayName="programacao">
             <div *ngFor="let p of programacao.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4">
+                <input type="hidden" formControlName="id" />
+                <input type="hidden" formControlName="eventoId" />
                 <div>
                     <label class="block font-medium">Dia</label>
-                    <input type="date" formControlName="dia" class="border p-2 w-full rounded" />
+                    <input type="input" formControlName="dia" class="border p-2 w-full rounded" />
                 </div>
                 <div>
                     <label class="block font-medium">Descrição</label>
@@ -160,6 +170,8 @@
         
         <!-- Aba Local -->
         <div *ngIf="abaAtiva === 'local'" formGroupName="local" class="space-y-4">
+            <input type="hidden" formControlName="id" />
+            <input type="hidden" formControlName="eventoId" />
             <div>
                 <label class="block font-medium">Latitude</label>
                 <input formControlName="latitude" placeholder="Latitude" class="border p-2 w-full rounded" />
@@ -197,17 +209,56 @@
         </div>
         
         <!-- Aba Informações Adicionais -->
-        <div *ngIf="abaAtiva === 'informacoesAdicionais'" formArrayName="informacoesAdicionais">
-            <div class="mt-4">
-                <label class="block font-medium">Conteúdo</label>
-                <div formArrayName="texto">
-                    <div *ngFor="let c of textoInformacoesAdicionais.controls; let i = index" class="flex items-center space-x-2 mt-2">
-                        <input [formControlName]="i" class="border p-2 w-full rounded" />
-                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded" (click)="removeInformacaoAdicional(i)">X</button>
+        <div *ngIf="abaAtiva === 'informacoesAdicionais'" [formGroup]="eventoForm">
+            <div formGroupName="informacoesAdicionais" class="mt-4">
+                <label class="block font-medium text-lg mb-2">Conteúdo HTML</label>
+                
+                <angular-editor
+                formControlName="texto"
+                [config]="editorConfig"
+                class="w-full"
+                ></angular-editor>
+            </div>
+        </div>
+        
+        
+        <!-- Aba Lotes de Inscrição -->
+        <div *ngIf="abaAtiva === 'lotes'" formArrayName="lotesInscricoes">
+            <h3 class="text-xl font-bold mb-4">Lotes de Inscrição</h3>
+            
+            <div *ngFor="let lote of lotesInscricoes.controls; let i = index" [formGroupName]="i" class="border p-4 rounded mb-4 bg-gray-50 shadow-sm">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block font-medium text-sm">Nome do Lote</label>
+                        <input formControlName="nome" class="border p-2 w-full rounded" placeholder="Ex: 1º Lote" />
+                    </div>
+                    
+                    <div>
+                        <label class="block font-medium text-sm">Data Início</label>
+                        <input type="date" formControlName="dataInicio" class="border p-2 w-full rounded" />
+                    </div>
+                    
+                    <div>
+                        <label class="block font-medium text-sm">Data Fim</label>
+                        <input type="date" formControlName="dataFim" class="border p-2 w-full rounded" />
+                    </div>
+                    
+                    <div>
+                        <label class="block font-medium text-sm">Valor (R$)</label>
+                        <input type="number" formControlName="valor" class="border p-2 w-full rounded" />
                     </div>
                 </div>
-                <button type="button" class="mt-3 bg-green-500 text-white px-4 py-2 rounded" (click)="addTextoInformacoesAdicionais()">+ Adicionar Texto</button>
+                
+                <div class="text-right mt-2">
+                    <button type="button" (click)="removeLote(i)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Remover Lote
+                    </button>
+                </div>
             </div>
+            
+            <button type="button" (click)="addLote()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                + Adicionar Lote
+            </button>
         </div>
         
         <!-- Aba Inscrições -->
