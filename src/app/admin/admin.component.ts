@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-
+  isCollapsed: boolean = true;
+  
+  
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }

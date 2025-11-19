@@ -228,7 +228,7 @@ export class InscricaoDialogComponent implements OnInit{
         this.inscricaoForm.get('grupoOracaoId')?.enable();
         this.inscricaoForm.get('email')?.enable();
         
-        this.toastr.info('Usuário não encontrado, preencha seus dados.');
+        this.toastr.info('Cadastro não encontrado, preencha seus dados.');
       } else {
         this.toastr.error('Erro ao buscar CPF.');
       }

@@ -1,38 +1,48 @@
 <div class="d-flex" id="wrapper">
+
   <!-- Sidebar -->
-  <div id="sidebar-wrapper" class="bg-dark text-white p-3">
-    <div class="sidebar-heading text-center mb-4">
-      <i class="bi bi-kanban"></i> Admin
+  <div id="sidebar-wrapper"
+       class="bg-dark text-white p-3"
+       [class.collapsed]="isCollapsed">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="sidebar-heading text-center">
+        <i class="bi bi-kanban"></i> <span>Admin</span>
+      </div>
+
+      <!-- Botão de collapse -->
+      <button (click)="toggleSidebar()" class="btn btn-outline-light btn-sm">
+        <i class="bi" [ngClass]="isCollapsed ? 'bi-arrow-right-square' : 'bi-arrow-left-square'"></i>
+      </button>
     </div>
+
     <ul class="list-unstyled">
       <li>
-        <a routerLink="/admin/eventos" routerLinkActive="active" class="nav-link text-white">
-          <i class="bi bi-calendar-event"></i> Eventos
+        <a routerLink="/admin/eventos" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+          <i class="bi bi-calendar-event me-2"></i> <span>Eventos</span>
         </a>
       </li>
       <li>
-        <a routerLink="/admin/usuarios" routerLinkActive="active" class="nav-link text-white">
-          <i class="bi bi-people"></i> Usuários
+        <a routerLink="/admin/usuarios" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+          <i class="bi bi-people me-2"></i> <span>Usuários</span>
         </a>
       </li>
       <li>
-        <a routerLink="/admin/config" routerLinkActive="active" class="nav-link text-white">
-          <i class="bi bi-gear"></i> Configurações
+        <a routerLink="/admin/config" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+          <i class="bi bi-gear me-2"></i> <span>Configurações</span>
         </a>
       </li>
     </ul>
   </div>
 
-  <!-- Page Content -->
+  <!-- Conteúdo -->
   <div id="page-content-wrapper" class="w-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
       <div class="container-fluid">
         <span class="navbar-brand">Painel Administrativo</span>
-        <div>
-          <button class="btn btn-outline-danger btn-sm">
-            <i class="bi bi-box-arrow-right"></i> Logout
-          </button>
-        </div>
+        <button class="btn btn-outline-danger btn-sm">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
       </div>
     </nav>
 
@@ -40,5 +50,5 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-</div>
 
+</div>

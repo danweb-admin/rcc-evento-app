@@ -1,15 +1,27 @@
-#wrapper {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-}
-
+/* Sidebar normal */
 #sidebar-wrapper {
-  min-width: 220px;
-  max-width: 220px;
+  width: 250px;
+  transition: width 0.3s ease;
+  overflow: hidden;
 }
 
-#sidebar-wrapper .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
+/* Sidebar recolhida */
+#sidebar-wrapper.collapsed {
+  width: 110px;
+}
+
+/* Some apenas o texto dos links */
+#sidebar-wrapper.collapsed a span {
+  display: none;
+}
+
+/* Ícones continuam visíveis */
+#sidebar-wrapper a i {
+  font-size: 1.3rem;
+  width: 30px; /* garante alinhamento */
+}
+
+/* Ajusta o alinhamento dos links recolhidos */
+#sidebar-wrapper.collapsed a {
+  justify-content: center !important;
 }

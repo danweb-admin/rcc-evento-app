@@ -1,14 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventoService } from '../services/eventos.service';
 import { ToastrService } from 'ngx-toastr';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-evento-form',
-  templateUrl: './evento-form.component.html'
+  templateUrl: './evento-form.component.html',
+  styleUrls: ['./evento-form.component.scss']
+  
 })
 export class EventoFormComponent implements OnInit {
   eventoForm!: FormGroup;
@@ -31,6 +34,15 @@ export class EventoFormComponent implements OnInit {
       ['insertVideo', 'toggleEditorMode']
     ]
   };
+  
+  // Lista filtrada que será exibida
+  inscricoesFiltradas: any[] = [];
+  // control de busca (reactive)
+  searchTerm = new FormControl('');
+  
+  // Paginação
+  paginaAtual: number = 1;
+  itensPorPagina: number = 10;
   
   constructor(
     private fb: FormBuilder,
@@ -94,6 +106,56 @@ export class EventoFormComponent implements OnInit {
       this.eventoId = id;
       this.titulo = 'Editar Evento';
       this.loadEvento(id);
+    }
+    
+    this.aplicarFiltros();
+    
+    this.searchTerm.valueChanges.pipe(
+      debounceTime(250)
+    ).subscribe(() => {
+      this.aplicarFiltros();
+    });
+  }
+  
+  // Total de páginas calculadas dinamicamente
+  get totalPaginas(): number {
+    return Math.ceil(this.inscricoesFiltradas.length / this.itensPorPagina);
+  }
+  
+  aplicarFiltros() {
+    const termo = (this.searchTerm.value || '').toString().toLowerCase().trim();
+    
+    this.inscricoesFiltradas = this.inscricoes.filter(i => {
+      return (
+        (i.codigoInscricao || '').toString().toLowerCase().includes(termo) ||
+        (i.nome || '').toString().toLowerCase().includes(termo) ||
+        (i.cpf || '').toString().includes(termo) ||
+        (i.telefone || '').toString().includes(termo) ||
+        (i.grupoOracao || '').toString().toLowerCase().includes(termo) ||
+        (i.decanato || '').toString().toLowerCase().includes(termo)
+      );
+    });
+    
+    this.paginaAtual = 1;
+  }
+  
+  
+  get dadosPaginados() {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.inscricoesFiltradas.slice(inicio, inicio + this.itensPorPagina);
+  }
+  
+  proximaPagina(event: any) {
+    event.preventDefault();    
+    if (this.paginaAtual < this.totalPaginas) {
+      this.paginaAtual++;
+    }
+  }
+  
+  paginaAnterior(event: any) {
+    event.preventDefault();
+    if (this.paginaAtual > 1) {
+      this.paginaAtual--;
     }
   }
   
@@ -241,7 +303,7 @@ export class EventoFormComponent implements OnInit {
           local: evento.local || {},
           sobre: evento.sobre || {},
           informacoesAdicionais: evento.informacoesAdicionais || {},
-
+          
           exibirPregadores: evento.exibirPregadores,
           exibirProgramacao: evento.exibirProgramacao,
           exibirInformacoesAdicionais: evento.exibirInformacoesAdicionais
@@ -254,6 +316,8 @@ export class EventoFormComponent implements OnInit {
         this.lotesInscricoes.clear();
         
         this.inscricoes = evento.inscricoes || [];
+        // inicializa filtrados
+        this.inscricoesFiltradas = [...this.inscricoes];
         
         // (evento.sobre || []).forEach((p: any) => this.addSobre(p));
         (evento.participacoes || []).forEach((p: any) => this.addPregador(p));
@@ -294,7 +358,7 @@ export class EventoFormComponent implements OnInit {
           this.router.navigate(['/admin/eventos']);
         });
       }
-       
+      
     } else {
       this.eventoForm.markAllAsTouched();
     }
@@ -332,6 +396,23 @@ export class EventoFormComponent implements OnInit {
     return d.toISOString().split('T')[0]; // retorna yyyy-MM-dd
   }
   
+  descreverTipoPagameto(tipoPagamento: string){
+    if (tipoPagamento == 'pix')
+      return 'Pix'
+    if (tipoPagamento == 'cartao')
+      return 'Cartão'
+    return ''
+  }
+  
+  descreverPagameto(pagamento: string){
+    if (pagamento == 'pendente')
+      return 'Pendente'
+    if (pagamento == 'pagamento_confirmado')
+      return 'Confirmado'
+    if (pagamento == 'cancelado')
+      return 'Cancelado'
+    return ''
+  }
   private slugify(text: string): string {
     return text
     .toString()

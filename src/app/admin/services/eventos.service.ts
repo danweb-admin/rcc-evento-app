@@ -6,6 +6,7 @@ import { map, Observable } from "rxjs";
 export class EventoService {
   private apiUrl = 'assets/eventos.json'; // simulando backend
   private baseUrl = 'https://backend.rcc-londrina.online/api/v1';
+  // private baseUrl = 'http://localhost:5290/api/v1';
 
 
   constructor(private http: HttpClient) {}
