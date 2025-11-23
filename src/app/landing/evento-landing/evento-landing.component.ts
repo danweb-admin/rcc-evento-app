@@ -21,7 +21,7 @@ export class EventoLandingComponent implements OnInit {
   grupos: any[] = [];
   wazeUrl!: SafeResourceUrl;
   menuAberto = false;
-  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos';
+  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos/get-all';
   fotoUrl = 'https://res.cloudinary.com/dgcpvxvcj/image/upload/v1761264849/Fotos%20Eventos/marcao.jpg';
 
 
