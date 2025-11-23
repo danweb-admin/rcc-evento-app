@@ -211,12 +211,14 @@ export class InscricaoDialogComponent implements OnInit{
         servoId: resp.id,
         cpf: cpf,
         nome: resp.name,
-        email: resp.email,
+        email: resp.email.toLowerCase(),
         telefone: resp.cellPhone,
         decanatoId: resp.grupoOracao?.paroquiaCapela?.decanatoId,
         grupoOracaoId: resp.grupoOracao?.id
       });
       
+      this.inscricaoForm.get('semGrupo')?.disable();
+
       this.modoVisualizacao = true;
       
     },(error: any) =>{

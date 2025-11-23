@@ -12,7 +12,7 @@ export class EventoService {
   constructor(private http: HttpClient) {}
 
   getEventos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/eventos`);
+    return this.http.get<any[]>(`${this.baseUrl}/eventos/get-all`);
   }
 
 

@@ -11,7 +11,8 @@ export class EventoListComponent implements OnInit {
   private apiUrl = 'assets/eventos.json';
   eventos: any[] = [];
   carregando = false;
-  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos';
+  baseUrl = 'https://backend.rcc-londrina.online/api/v1/eventos/get-all';
+  // baseUrl = 'http://localhost:5290/api/v1/eventos/get-all';
 
   
   constructor(private http: HttpClient, private router: Router, 
