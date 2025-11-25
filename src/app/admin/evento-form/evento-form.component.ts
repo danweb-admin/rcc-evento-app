@@ -280,6 +280,7 @@ export class EventoFormComponent implements OnInit {
   loadEvento(id: string) {
     this.eventoService.getById(id).subscribe({
       next: (dados: any[]) => {
+        debugger
         const evento = Array.isArray(dados)
         ? dados.find(e => e.id == id)
         : dados;

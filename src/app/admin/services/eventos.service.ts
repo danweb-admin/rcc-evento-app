@@ -5,8 +5,8 @@ import { map, Observable } from "rxjs";
 @Injectable({ providedIn: 'root' })
 export class EventoService {
   private apiUrl = 'assets/eventos.json'; // simulando backend
-  private baseUrl = 'https://backend.rcc-londrina.online/api/v1';
-  // private baseUrl = 'http://localhost:5290/api/v1';
+  // private baseUrl = 'https://backend.rcc-londrina.online/api/v1';
+  private baseUrl = 'http://localhost:5290/api/v1';
 
 
   constructor(private http: HttpClient) {}
@@ -18,7 +18,7 @@ export class EventoService {
 
 
   getById(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/eventos?id=${id}`)
+    return this.http.get(`${this.baseUrl}/eventos/${id}`)
     .pipe(map((resp: any) => {
       return resp;
     }));

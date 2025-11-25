@@ -30,6 +30,7 @@ export class EventoListComponent implements OnInit {
 
     this.eventoService.getEventos().subscribe(resp => {
       this.eventos = resp;
+      console.log(resp)
       this.carregando = false;
     })
     

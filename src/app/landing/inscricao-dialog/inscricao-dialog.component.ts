@@ -157,8 +157,10 @@ export class InscricaoDialogComponent implements OnInit{
     }
     // Aqui você envia a forma de pagamento para o backend
     this.service.inscricao(this.inscricaoForm.value).subscribe(resp => {
-      this.toastr.success('Inscrição realizada com sucessso!');
+      
       if (resp.tipoPagamento === 'pix'){
+        this.toastr.success('A inscrição será efetivada após o pagamento!');
+
         this.qrCode = true;
         this.qrCodeLink = resp.linkQrCodePNG;
         this.pixCopiaECola = resp.qrCodeCopiaCola;
@@ -166,6 +168,7 @@ export class InscricaoDialogComponent implements OnInit{
       }
 
       if (resp.tipoPagamento === 'cartao'){
+        this.toastr.success('Inscrição realizada com sucessso!');
         this.mostrarQRCode = false
       }
  
