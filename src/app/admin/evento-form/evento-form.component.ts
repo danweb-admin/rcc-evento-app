@@ -178,10 +178,10 @@ export class EventoFormComponent implements OnInit {
   }
   
   addCampo(item: any = { id: null, eventoId: this.eventoId, label: '', tipo: 'text', obrigatorio: false, opcoes: '', ordem: 0} ) {
-    console.log(item)
+    
     this.eventoCampos.push(
-      this.fb.group({
-        id: [null],
+      this.fb.group({ 
+        id: [item.id || null],
         eventoId: [this.eventoId],
         label: [ item.label],
         tipo: [item.tipo],
