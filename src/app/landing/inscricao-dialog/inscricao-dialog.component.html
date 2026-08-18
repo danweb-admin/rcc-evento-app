@@ -128,6 +128,17 @@
             Você receberá um e-mail com a confirmação.
           </p>
         </div>
+
+        <div *ngIf="statusPagamento === 'GRATUITO'" class="text-center mt-6">
+          
+          <p class="text-gray-600 mt-2">
+            Sua inscrição foi concluída com sucesso.
+          </p>
+          
+          <p class="text-sm text-gray-500 mt-1">
+            Você receberá um e-mail com a confirmação.
+          </p>
+        </div>
         
         <!-- CONTEÚDO NORMAL (DINHEIRO) --> 
         <ng-container *ngIf="statusPagamento !== 'PAGO'">
@@ -148,7 +159,7 @@
         
         
         <!-- CONTEÚDO NORMAL (PIX / CARTÃO) -->
-        <ng-container *ngIf="statusPagamento !== 'PAGO'">
+        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (eventoGratuito && valorInscricao > 0)">
           
           <div *ngIf="mostrarQRCode && habilitarPix" class="pagamento-card" [class.selected]="formaSelecionada === 'pix'" (click)="formaPagamento('pix')">
             
@@ -203,7 +214,7 @@
           </div>
         </ng-container>
         
-        <ng-container *ngIf="statusPagamento !== 'PAGO'">
+        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (eventoGratuito && valorInscricao > 0)">
           <div *ngIf="habilitarCartao" class="pagamento-card" [class.selected]="formaSelecionada === 'cartao'" (click)="formaPagamento('cartao')">
             <h4>Pagamento com Cartão de Crédito</h4>
             <p>Pague com seu cartão de crédito.</p>

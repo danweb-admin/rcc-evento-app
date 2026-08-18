@@ -29,10 +29,11 @@ export class InscricaoDialogComponent implements OnInit{
   gruposComFiltro: any[] = []; 
   
   semGrupo = false;
+  eventoGratuito = false;
   permitirPagamento = false;
   
   valorInscricao!: number;
-  formaSelecionada: 'pix' | 'cartao' | 'dinheiro' | null = null;
+  formaSelecionada: 'pix' | 'cartao' | 'dinheiro'  = 'pix';
   modoVisualizacao = false;
   qrCode = false;
   mostrarCartao =  true;
@@ -58,7 +59,7 @@ export class InscricaoDialogComponent implements OnInit{
   
   pixExpirado = false;
   private timerPix: any;
-  statusPagamento: 'PENDENTE' | 'PAGO' | 'EXPIRADO' = 'PENDENTE';
+  statusPagamento: 'PENDENTE' | 'PAGO' | 'EXPIRADO' | 'GRATUITO' = 'PENDENTE';
   private pollingPix: any;
   
   constructor(private fb: FormBuilder,
@@ -82,7 +83,8 @@ export class InscricaoDialogComponent implements OnInit{
       nomeCartao: [],
       validade: [],
       cvv: [],
-      quantidadeParcelas: [0]
+      quantidadeParcelas: [0],
+      formaSelecionada: ''
       
     });
   }
@@ -193,12 +195,26 @@ export class InscricaoDialogComponent implements OnInit{
       // verifica se atingiu o limite de participantes
       this.service.getLimiteParticipantes(this.eventoId).subscribe({
         next: (valor) => {
+          
           if (!valor){
             this.toastr.error('As inscrições desse Evento foram encerradas!');
             this.bloquearConfirmar = true;
           }
         }
       });
+
+      if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649') {
+        
+        let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
+
+        if (camiseta === 'SIM'){
+          this.valorInscricao = 60
+        }
+
+        if (camiseta === 'NÃO'){
+          this.valorInscricao = 0
+        }
+      }
     }
     
     
@@ -220,12 +236,18 @@ export class InscricaoDialogComponent implements OnInit{
     
     confirmar() {
       
-      if (!this.formaSelecionada){
+      if (this.eventoGratuito){
+        this.inscricaoForm.patchValue({tipoPagamento: 'gratuito'})
+        this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
+        this.inscricaoForm.patchValue({formaSelecionada: this.formaSelecionada})
+      }
+      
+      if (!this.formaSelecionada &&  !this.eventoGratuito){
         this.toastr.warning('Selecione uma forma de pagamento! Pix ou Cartão')
         return;
       }
 
-      if (this.valorInscricao == 0){
+      if (this.valorInscricao == 0 && !this.eventoGratuito){
         this.toastr.warning('Valor da Inscrição não pode ser 0.')
         return;
       }
@@ -240,8 +262,8 @@ export class InscricaoDialogComponent implements OnInit{
       
       // Aqui você envia a forma de pagamento para o backend
       this.service.inscricao(payload).subscribe(resp => {
-        
-        if (resp.tipoPagamento === 'pix'){
+
+        if (resp.tipoPagamento === 'pix' || this.formaSelecionada === 'pix'){
           this.toastr.success('A inscrição será efetivada após o pagamento, verifique seu email!');
           
           this.qrCode = true;
@@ -253,7 +275,7 @@ export class InscricaoDialogComponent implements OnInit{
           this.iniciarVerificacaoPagamento();
         }
         
-        if (resp.tipoPagamento === 'cartao'){
+        if (resp.tipoPagamento === 'cartao' || this.formaSelecionada === 'cartao'){
           this.toastr.success('Link para pagamento com cartão de crédito foi gerado com sucesso.!');
           this.mostrarQRCode = false
           this.linkPgtoCartao = resp.linkPgtoCartao;
@@ -263,6 +285,11 @@ export class InscricaoDialogComponent implements OnInit{
           this.toastr.success('Inscrição realizada com sucesso.!');
           this.pagoDinheiro = true;
           this.statusPagamento = 'PAGO';
+        }
+
+        if (resp.tipoPagamento === 'gratuito' && !['cartao', 'pix'].includes(this.formaSelecionada)){
+          this.toastr.success('Inscrição realizada com sucesso.!');
+          this.statusPagamento = 'GRATUITO';
         }
         
         this.codigoInscricao = resp.codigoInscricao;
@@ -314,6 +341,7 @@ export class InscricaoDialogComponent implements OnInit{
         this.habilitarPix = resp.habilitarPix;
         this.habilitarDinheiro = resp.habilitarDinheiro;
         this.qtdParcelas = resp.qtdParcelas;
+        this.eventoGratuito = resp.eventoGratuito;
       });
     }
     
