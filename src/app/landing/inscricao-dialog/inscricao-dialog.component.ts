@@ -56,6 +56,11 @@ export class InscricaoDialogComponent implements OnInit{
   tempoTotalPix = 15 * 60; // 15 minutos
   tempoRestante = this.tempoTotalPix;
   camposDinamicos: any[] = [];
+
+  mostrarDecanato: boolean = true;
+  mostrarGrupo: boolean = true;
+  mostrarNenhumGrupo: boolean = true;
+
   
   pixExpirado = false;
   private timerPix: any;
@@ -125,6 +130,12 @@ export class InscricaoDialogComponent implements OnInit{
     });
     
     this.buscaLoteInscricao();
+
+    if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649') {
+      this.mostrarDecanato = false
+      this.mostrarGrupo = false;
+      this.mostrarNenhumGrupo = false;
+    }
   }
   
   formatarTempo(): string {
@@ -262,7 +273,7 @@ export class InscricaoDialogComponent implements OnInit{
       
       // Aqui você envia a forma de pagamento para o backend
       this.service.inscricao(payload).subscribe(resp => {
-
+        
         if (resp.tipoPagamento === 'pix' || this.formaSelecionada === 'pix'){
           this.toastr.success('A inscrição será efetivada após o pagamento, verifique seu email!');
           
@@ -292,8 +303,7 @@ export class InscricaoDialogComponent implements OnInit{
           this.statusPagamento = 'GRATUITO';
         }
         
-        this.codigoInscricao = resp.codigoInscricao;
-        this.bloquearConfirmar = true;
+        
       },(error: any) =>{
         this.toastr.warning(error.error.message)
       });

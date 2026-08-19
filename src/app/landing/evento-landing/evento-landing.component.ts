@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -16,7 +16,7 @@ export class EventoLandingComponent implements OnInit {
   grupos: any[] = [];
   wazeUrl!: SafeResourceUrl;
   menuAberto = false;
-
+  
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -26,15 +26,18 @@ export class EventoLandingComponent implements OnInit {
     
   }
   
+  
   ngOnInit(): void {
     const slug= this.route.snapshot.paramMap.get('slug');
-
+    
     this.service.getSlug(slug).subscribe(ev => {
       this.evento = ev;
       this.gerarMapaWaze();
 
+      if (slug == 'deus-conosco-2026') {
+        this.abrirModal();
+      }
     });
-    
   }
   
   isMobile(): boolean {
@@ -55,7 +58,7 @@ export class EventoLandingComponent implements OnInit {
   fecharModal() {
     this.showModal = false;
   }
-
+  
   formatarData(data: string | Date): string | null {
     if (!data) return null;
     const d = new Date(data);

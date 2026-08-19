@@ -35,7 +35,7 @@
           <input type="text" formControlName="telefone" mask="(00) 0 0000-0000" placeholder="Digite seu Telefone" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500" [ngClass]="{ 'readonly-select': modoVisualizacao }" />
         </div>
         
-        <div>
+        <div *ngIf="mostrarDecanato">
           <label class="block text-sm font-medium text-gray-700 mb-1">Selecione o Decanato</label>
           <select formControlName="decanatoId" [ngClass]="{ 'readonly-select': modoVisualizacao }" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500">
             <option value="">Selecione o Decanato</option>
@@ -43,7 +43,7 @@
           </select>
         </div>
         
-        <div>
+        <div *ngIf="mostrarGrupo">  
           <label class="block text-sm font-medium text-gray-700 mb-1">Selecione o Grupo de Oração</label>
           <select formControlName="grupoOracaoId" [ngClass]="{ 'readonly-select': modoVisualizacao }" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500">
             <option value="">Selecione o Grupo de Oração</option>
@@ -54,7 +54,7 @@
         </div>
         
         <!-- Checkbox -->
-        <div class="flex items-center gap-2 mt-1">
+        <div class="flex items-center gap-2 mt-1" *ngIf="mostrarNenhumGrupo">
           <input type="checkbox" id="semGrupo" formControlName="semGrupo"
           class="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500" />
           <label for="semGrupo" class="text-sm text-gray-700">
