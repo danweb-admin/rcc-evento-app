@@ -35,7 +35,7 @@
           <input type="text" formControlName="telefone" mask="(00) 0 0000-0000" placeholder="Digite seu Telefone" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500" [ngClass]="{ 'readonly-select': modoVisualizacao }" />
         </div>
         
-        <div *ngIf="mostrarDecanato">
+        <div >
           <label class="block text-sm font-medium text-gray-700 mb-1">Selecione o Decanato</label>
           <select formControlName="decanatoId" [ngClass]="{ 'readonly-select': modoVisualizacao }" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500">
             <option value="">Selecione o Decanato</option>
@@ -43,7 +43,7 @@
           </select>
         </div>
         
-        <div *ngIf="mostrarGrupo">  
+        <div >  
           <label class="block text-sm font-medium text-gray-700 mb-1">Selecione o Grupo de Oração</label>
           <select formControlName="grupoOracaoId" [ngClass]="{ 'readonly-select': modoVisualizacao }" class="w-full border rounded p-2 text-sm focus:ring-pink-500 focus:border-pink-500">
             <option value="">Selecione o Grupo de Oração</option>
@@ -68,6 +68,9 @@
           
           <!-- TEXT -->
           <input *ngIf="campo.tipo === 'text'" [formControlName]="campo.nomeCampo" type="text" class="form-control" [placeholder]="campo.label">
+          
+          <!-- DATE -->
+          <input *ngIf="campo.tipo === 'date'" [formControlName]="campo.nomeCampo" type="date" class="form-control" [placeholder]="campo.label">
           
           <!-- NUMBER -->
           <input *ngIf="campo.tipo === 'number'" [formControlName]="campo.nomeCampo" type="number" class="form-control">
