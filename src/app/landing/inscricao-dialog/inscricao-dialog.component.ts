@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { EventoService } from 'src/app/admin/services/eventos.service';
 import { ValidateService } from '../services/validate.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 interface Decanato {
   id: string;
@@ -21,7 +22,7 @@ export class InscricaoDialogComponent implements OnInit{
   @ViewChild('cpfInput') cpfInput!: ElementRef;
   
   selectedTab: 'inscricao' | 'pagamento' = 'inscricao';
-  
+  slug: string = ''
   inscricaoForm: FormGroup;
   decanatos: Decanato[] = [];
   
@@ -70,7 +71,9 @@ export class InscricaoDialogComponent implements OnInit{
   constructor(private fb: FormBuilder,
     private service: EventoService,
     private validateService: ValidateService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    
   ) {
     this.inscricaoForm = this.fb.group({
       eventoId: this.eventoId,
@@ -98,6 +101,9 @@ export class InscricaoDialogComponent implements OnInit{
     this.carregarGrupoOracoes();
     this.carregarCampos();
     this.getEventoById();
+
+        const slug= this.route.snapshot.paramMap.get('slug');
+
     
     
     this.inscricaoForm.patchValue({ eventoId: this.eventoId });
@@ -478,6 +484,39 @@ export class InscricaoDialogComponent implements OnInit{
             )
           );
         });
+
+        console.log(this.slug)
+        // if (this.slug == 'deus-conosco-2026'){
+          this.inscricaoForm.get('comprarcamiseta?')?.valueChanges.subscribe(camiseta => {
+            
+            if (camiseta == 'NÃO'){
+              this.inscricaoForm.get('tamanhocamiseta')?.disable();
+            }else{
+              this.inscricaoForm.get('tamanhocamiseta')?.enable();
+            }
+            console.log(camiseta)
+          });
+
+          this.inscricaoForm.get('participantedeoutradiocese')?.valueChanges.subscribe(diocese => {
+            
+            if (diocese == 'NÃO'){
+              this.inscricaoForm.get('qualdioceseparticipa?')?.disable();
+            }else{
+              this.inscricaoForm.get('qualdioceseparticipa?')?.enable();
+            }
+          });
+
+          this.inscricaoForm.get('façopartedarcc?')?.valueChanges.subscribe(rcc => {
+            
+            if (rcc == 'SIM'){
+              this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.disable();
+            }else{
+              this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.enable();
+            }
+          });
+          
+        // }
+        
       });
     }
     
