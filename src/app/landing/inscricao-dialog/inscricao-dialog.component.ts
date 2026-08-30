@@ -188,6 +188,8 @@ export class InscricaoDialogComponent implements OnInit{
     }
 
     proximo() {
+      this.statusPagamento = 'PENDENTE'
+
       var quantidade = this.inscricaoForm.get('quantidade')
       
       if (quantidade != null){
@@ -253,10 +255,20 @@ export class InscricaoDialogComponent implements OnInit{
 
       this.formaSelecionada = forma;
       this.inscricaoForm.patchValue({tipoPagamento: forma})
-
+      
       // ESSA CONFIGURACAO É ESPECIFICA PARA O EVENTO -> EPA 2026
       if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649' && forma === 'cartao') {
         this.valorInscricaoOriginal = this.valorInscricao
+
+        let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
+
+        if (camiseta === 'SIM'){
+          this.valorInscricao = 49.90
+        }
+
+        if (camiseta === 'NÃO'){
+          this.valorInscricao = 0
+        }
 
         this.valorInscricao = this.valorInscricao *  1.04
         this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
@@ -268,7 +280,16 @@ export class InscricaoDialogComponent implements OnInit{
           this.valorInscricaoOriginal = this.valorInscricao
         }
 
-        this.valorInscricao = this.valorInscricaoOriginal
+        let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
+
+        if (camiseta === 'SIM'){
+          this.valorInscricao = 49.90
+        }
+
+        if (camiseta === 'NÃO'){
+          this.valorInscricao = 0
+        }
+
         this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
       }
     }
@@ -412,6 +433,7 @@ export class InscricaoDialogComponent implements OnInit{
         this.inscricaoForm.get('semGrupo')?.disable();
         
         this.modoVisualizacao = true;
+        debugger
         
         if (resp.status == 'pagamento_confirmado'){
           this.statusPagamento = 'PAGO'
