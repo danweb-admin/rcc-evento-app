@@ -42,7 +42,7 @@ export class InscricaoDialogComponent implements OnInit{
   bloquearConfirmar = false;
   qrCodeLink: string  = ''
   qrCodePNG: string  = ''
-
+  
   pixCopiaECola: string = '';
   copiado = false;
   codigoInscricao: string = '';
@@ -57,17 +57,20 @@ export class InscricaoDialogComponent implements OnInit{
   tempoTotalPix = 15 * 60; // 15 minutos
   tempoRestante = this.tempoTotalPix;
   camposDinamicos: any[] = [];
-
+  
   mostrarDecanato: boolean = true;
   mostrarGrupo: boolean = true;
   mostrarNenhumGrupo: boolean = true;
   valorInscricaoOriginal  = 0;
-
+  
   
   pixExpirado = false;
   private timerPix: any;
   statusPagamento: 'PENDENTE' | 'PAGO' | 'EXPIRADO' | 'GRATUITO' = 'PENDENTE';
   private pollingPix: any;
+  
+  arrayCamisetaInfantil: any[] = ["Infantil - 02","Infantil - 04","Infantil - 06","Infantil - 08", "Infantil - 10","Infantil - 12"]
+  
   
   constructor(private fb: FormBuilder,
     private service: EventoService,
@@ -102,9 +105,9 @@ export class InscricaoDialogComponent implements OnInit{
     this.carregarGrupoOracoes();
     this.carregarCampos();
     this.getEventoById();
-
-        const slug= this.route.snapshot.paramMap.get('slug');
-
+    
+    const slug= this.route.snapshot.paramMap.get('slug');
+    
     
     
     this.inscricaoForm.patchValue({ eventoId: this.eventoId });
@@ -137,7 +140,7 @@ export class InscricaoDialogComponent implements OnInit{
     });
     
     this.buscaLoteInscricao();
-
+    
     if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649') {
       this.mostrarDecanato = false
       this.mostrarGrupo = false;
@@ -186,32 +189,32 @@ export class InscricaoDialogComponent implements OnInit{
         }
       });
     }
-
+    
     proximo() {
       this.statusPagamento = 'PENDENTE'
-
+      
       var quantidade = this.inscricaoForm.get('quantidade')
       
       if (quantidade != null){
         var valueQtd = quantidade?.value;
-
+        
         if (valueQtd == 0){
           this.toastr.error('Quantidade não pode ser 0!');
           return;
         }
-
+        
         this.valorInscricao = this.valorInscricao * valueQtd;
         this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
       }
-
+      
       if (this.inscricaoForm.invalid) {
         this.inscricaoForm.markAllAsTouched();
         return;
       }
-
+      
       this.selectedTab = 'pagamento'
       this.bloquearConfirmar = false;
-
+      
       // verifica se atingiu o limite de participantes
       this.service.getLimiteParticipantes(this.eventoId).subscribe({
         next: (valor) => {
@@ -222,15 +225,20 @@ export class InscricaoDialogComponent implements OnInit{
           }
         }
       });
-
+      
       if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649') {
         
         let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
-
+        let tamanhoCamiseta = this.inscricaoForm.value["tamanhocamiseta"];
+        
         if (camiseta === 'SIM'){
-          this.valorInscricao = 49.90
+          if (this.arrayCamisetaInfantil.includes(tamanhoCamiseta)) {
+            this.valorInscricao = 39.90
+          }else{
+            this.valorInscricao = 49.90
+          }
         }
-
+        
         if (camiseta === 'NÃO'){
           this.valorInscricao = 0
         }
@@ -252,44 +260,54 @@ export class InscricaoDialogComponent implements OnInit{
     formaPagamento(forma: any){
       this.formaSelecionada = forma;
       this.inscricaoForm.patchValue({tipoPagamento: forma})
-
+      
       this.formaSelecionada = forma;
       this.inscricaoForm.patchValue({tipoPagamento: forma})
       
       // ESSA CONFIGURACAO É ESPECIFICA PARA O EVENTO -> EPA 2026
       if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649' && forma === 'cartao') {
         this.valorInscricaoOriginal = this.valorInscricao
-
+        
         let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
-
+        let tamanhoCamiseta = this.inscricaoForm.value["tamanhocamiseta"];
+        
         if (camiseta === 'SIM'){
-          this.valorInscricao = 49.90
+          if (this.arrayCamisetaInfantil.includes(tamanhoCamiseta)) {
+            this.valorInscricao = 39.90
+          }else{
+            this.valorInscricao = 49.90
+          }
         }
-
+        
         if (camiseta === 'NÃO'){
           this.valorInscricao = 0
         }
-
+        
         this.valorInscricao = this.valorInscricao *  1.04
         this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
       }
-
+      
       // ESSA CONFIGURACAO É ESPECIFICA PARA O EVENTO -> EPA 2026
       if (this.eventoId.toUpperCase() === '910BFAC1-3E76-422A-BDAB-C3B7A2EEC649' && forma === 'pix') {
         if (this.valorInscricaoOriginal === undefined){
           this.valorInscricaoOriginal = this.valorInscricao
         }
-
+        
         let camiseta = this.inscricaoForm.value["comprarcamiseta?"];
-
+        let tamanhoCamiseta = this.inscricaoForm.value["tamanhocamiseta"];
+        
         if (camiseta === 'SIM'){
-          this.valorInscricao = 49.90
+          if (this.arrayCamisetaInfantil.includes(tamanhoCamiseta)) {
+            this.valorInscricao = 39.90
+          }else{
+            this.valorInscricao = 49.90
+          }
         }
-
+        
         if (camiseta === 'NÃO'){
           this.valorInscricao = 0
         }
-
+        
         this.inscricaoForm.patchValue({valorInscricao: this.valorInscricao})
       }
     }
@@ -306,7 +324,7 @@ export class InscricaoDialogComponent implements OnInit{
         this.toastr.warning('Selecione uma forma de pagamento! Pix ou Cartão')
         return;
       }
-
+      
       if (this.valorInscricao == 0 && !this.eventoGratuito){
         this.toastr.warning('Valor da Inscrição não pode ser 0.')
         return;
@@ -346,7 +364,7 @@ export class InscricaoDialogComponent implements OnInit{
           this.pagoDinheiro = true;
           this.statusPagamento = 'PAGO';
         }
-
+        
         if (resp.tipoPagamento === 'gratuito' && !['cartao', 'pix'].includes(this.formaSelecionada)){
           this.toastr.success('Inscrição realizada com sucesso.!');
           this.statusPagamento = 'GRATUITO';
@@ -433,7 +451,6 @@ export class InscricaoDialogComponent implements OnInit{
         this.inscricaoForm.get('semGrupo')?.disable();
         
         this.modoVisualizacao = true;
-        debugger
         
         if (resp.status == 'pagamento_confirmado'){
           this.statusPagamento = 'PAGO'
@@ -528,37 +545,37 @@ export class InscricaoDialogComponent implements OnInit{
             )
           );
         });
-
+        
         console.log(this.slug)
         // if (this.slug == 'deus-conosco-2026'){
-          this.inscricaoForm.get('comprarcamiseta?')?.valueChanges.subscribe(camiseta => {
-            
-            if (camiseta == 'NÃO'){
-              this.inscricaoForm.get('tamanhocamiseta')?.disable();
-            }else{
-              this.inscricaoForm.get('tamanhocamiseta')?.enable();
-            }
-            console.log(camiseta)
-          });
-
-          this.inscricaoForm.get('participantedeoutradiocese')?.valueChanges.subscribe(diocese => {
-            
-            if (diocese == 'NÃO'){
-              this.inscricaoForm.get('qualdioceseparticipa?')?.disable();
-            }else{
-              this.inscricaoForm.get('qualdioceseparticipa?')?.enable();
-            }
-          });
-
-          this.inscricaoForm.get('façopartedarcc?')?.valueChanges.subscribe(rcc => {
-            
-            if (rcc == 'SIM'){
-              this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.disable();
-            }else{
-              this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.enable();
-            }
-          });
+        this.inscricaoForm.get('comprarcamiseta?')?.valueChanges.subscribe(camiseta => {
           
+          if (camiseta == 'NÃO'){
+            this.inscricaoForm.get('tamanhocamiseta')?.disable();
+          }else{
+            this.inscricaoForm.get('tamanhocamiseta')?.enable();
+          }
+          console.log(camiseta)
+        });
+        
+        this.inscricaoForm.get('participantedeoutradiocese')?.valueChanges.subscribe(diocese => {
+          
+          if (diocese == 'NÃO'){
+            this.inscricaoForm.get('qualdioceseparticipa?')?.disable();
+          }else{
+            this.inscricaoForm.get('qualdioceseparticipa?')?.enable();
+          }
+        });
+        
+        this.inscricaoForm.get('façopartedarcc?')?.valueChanges.subscribe(rcc => {
+          
+          if (rcc == 'SIM'){
+            this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.disable();
+          }else{
+            this.inscricaoForm.get('qualmovimento/pastoralouserviçoparticipa')?.enable();
+          }
+        });
+        
         // }
         
       });
