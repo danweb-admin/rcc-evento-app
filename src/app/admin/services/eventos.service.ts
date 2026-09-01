@@ -108,4 +108,11 @@ export class EventoService {
     }));
   }
 
+  exportCSV(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/eventos/exportar-inscricoes/${id}`, {
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
 }

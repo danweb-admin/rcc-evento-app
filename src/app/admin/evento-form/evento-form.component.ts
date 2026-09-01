@@ -203,56 +203,40 @@ export class EventoFormComponent implements OnInit {
   }
   
   downloadCsv(e: any) {
-    e.preventDefault()
+    e.preventDefault();
     
-    if (!this.inscricoesFiltradas || this.inscricoesFiltradas.length === 0) {
-      return;
+    if (this.eventoId === null){
+      
+      return
     }
     
-    const headers = [
-      'Código Inscrição',
-      'Nome',
-      'CPF',
-      'Telefone',
-      'Grupo de Oração',
-      'Decanato',
-      'Pagamento',
-      'Status'
-    ];
     
-    
-    
-    const rows = this.inscricoesFiltradas.map(i => [
-      i.codigoInscricao,
-      i.nome,
-      i.cpf,
-      i.telefone,
-      i.grupoOracao,
-      i.decanato,
-      i.tipoPagamento,
-      i.status
-    ]);
-    
-    const csvContent =
-    '\uFEFF' + // BOM para Excel aceitar acentos
-    [
-      headers.join(';'),
-      ...rows.map(row =>
-        row.map(value => `"${(value ?? '').toString().replace(/"/g, '""')}"`).join(';')
-      )
-    ].join('\n');
-    
-    const blob = new Blob([csvContent], {
-      type: 'text/csv;charset=utf-8;'
+    this.eventoService.exportCSV(this.eventoId).subscribe(resp => {
+      
+      const blob = resp.body!;
+      const contentDisposition = resp.headers.get('content-disposition');
+      const hoje = new Date();
+
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const ano = hoje.getFullYear();
+
+      let fileName = `inscricoes_${dia}-${mes}-${ano}.xlsx`;
+      
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="(.+)"/);
+        if (match) fileName = match[1];
+      }
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      
+      window.URL.revokeObjectURL(url);
     });
-    
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `inscricoes_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    
-    window.URL.revokeObjectURL(url);
   }
   
   
@@ -392,7 +376,7 @@ export class EventoFormComponent implements OnInit {
   getInformacoesAdicionais(): FormArray { 
     return this.eventoForm.get('informacoesAdicionais') as FormArray; 
   }
-
+  
   getEventoCampos(): FormArray { 
     return this.eventoForm.get('eventoCampos') as FormArray; 
   }
@@ -403,7 +387,7 @@ export class EventoFormComponent implements OnInit {
         const evento = Array.isArray(dados)
         ? dados.find(e => e.id == id)
         : dados;
-
+        
         
         if (!evento) {
           console.error('Evento não encontrado!');
@@ -438,7 +422,7 @@ export class EventoFormComponent implements OnInit {
           qtdParcelas: evento.qtdParcelas, 
           
         });
-
+        
         // this.getSobre().clear();
         this.getPregadores().clear();
         this.getProgramacao().clear();

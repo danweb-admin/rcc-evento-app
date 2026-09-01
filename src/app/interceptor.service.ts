@@ -10,11 +10,12 @@ import {
 import { catchError, finalize, Observable, throwError } from 'rxjs';
 import { LoadingService } from './spinner.service';
 import { Route, Router } from '@angular/router';
+import { AuthService } from './admin/services/auth.service';
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
   constructor(private loadingService: LoadingService, 
-    private router: Router) {}
+    private router: Router, private auth: AuthService) {}
     
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       const ignorarLoading = req.url.includes('/eventos/verifica-status');
@@ -36,6 +37,8 @@ export class Interceptor implements HttpInterceptor {
             this.loadingService.hide()
           }),
           catchError((error: HttpErrorResponse) => {
+            this.auth.logout();
+            this.router.navigate(['/home']);
             
             this.showError(error);
             // this.spinnerService.hide();
