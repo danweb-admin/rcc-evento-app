@@ -369,7 +369,8 @@ export class InscricaoDialogComponent implements OnInit{
           this.toastr.success('Inscrição realizada com sucesso.!');
           this.statusPagamento = 'GRATUITO';
         }
-        
+        this.codigoInscricao = resp.codigoInscricao;
+        this.bloquearConfirmar = true;
         
       },(error: any) =>{
         this.toastr.warning(error.error.message)

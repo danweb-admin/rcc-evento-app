@@ -162,7 +162,7 @@
         
         
         <!-- CONTEÚDO NORMAL (PIX / CARTÃO) -->
-        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (eventoGratuito && valorInscricao > 0)">
+        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (valorInscricao > 0)">
           
           <div *ngIf="mostrarQRCode && habilitarPix" class="pagamento-card" [class.selected]="formaSelecionada === 'pix'" (click)="formaPagamento('pix')">
             
@@ -217,7 +217,7 @@
           </div>
         </ng-container>
         
-        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (eventoGratuito && valorInscricao > 0)">
+        <ng-container *ngIf="statusPagamento !== 'PAGO' &&  (valorInscricao > 0)">
           <div *ngIf="habilitarCartao" class="pagamento-card" [class.selected]="formaSelecionada === 'cartao'" (click)="formaPagamento('cartao')">
             <h4>Pagamento com Cartão de Crédito</h4>
             <p>Pague com seu cartão de crédito.</p>
