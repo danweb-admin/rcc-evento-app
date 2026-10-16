@@ -238,6 +238,25 @@ export class EventoFormComponent implements OnInit {
       window.URL.revokeObjectURL(url);
     });
   }
+
+  removerInscricao(event: any, inscricao: any) {
+    event.preventDefault();
+    
+    if (!confirm(`Deseja remover a inscrição ${inscricao.codigoInscricao}?`)) {
+      return;
+    }
+    
+    // Exemplo:
+    this.eventoService.getRemoverInscricao(inscricao.codigoInscricao)
+    .subscribe({
+      next: () => {
+        this.toastr.info('Inscrição foi removida com sucesso!');
+      },
+      error: () => {
+        alert('Erro ao isentar inscrição.');
+      }
+    });
+  }
   
   
   get dadosPaginados() {
