@@ -6,12 +6,14 @@ import { EventoLandingComponent } from './evento-landing/evento-landing.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { InscricaoDialogComponent } from './inscricao-dialog/inscricao-dialog.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { ConsultaInscricaoDialogComponent } from './consulta-inscricao-dialog/consulta-inscricao-dialog.component';
 
 
 @NgModule({
   declarations: [
     EventoLandingComponent,
-    InscricaoDialogComponent
+    InscricaoDialogComponent,
+    ConsultaInscricaoDialogComponent
   ],
   imports: [
     CommonModule,

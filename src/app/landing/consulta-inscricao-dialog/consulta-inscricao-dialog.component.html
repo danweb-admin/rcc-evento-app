@@ -1,0 +1,141 @@
+<div *ngIf="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+        <!-- Cabeçalho -->
+        <div class="bg-pink-600 text-white px-6 py-5 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold">
+                    Consultar inscrição
+                </h2>
+
+                <p class="text-sm text-pink-100 mt-1">
+                    Consulte os dados da sua inscrição
+                </p>
+            </div>
+
+            <button
+                type="button"
+                (click)="fechar()"
+                class="text-white text-2xl hover:text-pink-200">
+                &times;
+            </button>
+        </div>
+
+        <!-- Formulário -->
+        <div class="p-6">
+            <form [formGroup]="form" (ngSubmit)="consultar()">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        Informe CPF
+                    </label>
+
+                    <input type="text" formControlName="cpf" placeholder="Ex.: 000.000.999-11" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-500 focus:outline-none" mask="000.000.000-00" >
+                </div>
+
+                <button
+                    type="submit"
+                    [disabled]="form.invalid || carregando"
+                    class="w-full bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed">
+
+                    <span *ngIf="!carregando">
+                        Consultar inscrição
+                    </span>
+
+                    <span *ngIf="carregando">
+                        Consultando...
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Erro -->
+            <div
+                *ngIf="erro"
+                class="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
+
+                {{ erro }}
+
+            </div>
+
+
+            <!-- Resultado -->
+            <div
+                *ngIf="inscricao"
+                class="mt-6 border-t pt-5">
+
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    Dados da inscrição
+                </h3>
+
+
+                <div class="space-y-2 text-sm">
+
+                    <p>
+                        <strong>Inscrito:</strong>
+                        {{ inscricao.nome }}
+                    </p>
+
+                    <p>
+                        <strong>E-mail:</strong>
+                        {{ inscricao.email }}
+                    </p>
+
+                    <p>
+                        <strong>Código:</strong>
+                        {{ inscricao.codigoInscricao }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        <span
+                            class="font-semibold"
+                            [ngClass]="{
+                                'text-pink-600': inscricao.status === 'pagamento_confirmado',
+                                'text-blue-600': inscricao.status === 'isento'
+                            }">
+
+                            {{ descreverStatus(inscricao.status) }}
+
+                        </span>
+
+                    </p>
+
+                </div>
+
+
+                <!-- Reenviar comprovante -->
+                <button
+                    type="button"
+                    (click)="reenviarComprovante()"
+                    [disabled]="reenviando"
+                    class="w-full mt-5 border border-pink-600 text-pink-600 py-3 rounded-lg font-semibold hover:bg-pink-50 disabled:opacity-50">
+
+                    <span *ngIf="!reenviando">
+                        Reenviar comprovante por e-mail
+                    </span>
+
+                    <span *ngIf="reenviando">
+                        Enviando comprovante...
+                    </span>
+
+                </button>
+
+
+                <!-- Sucesso -->
+                <div
+                    *ngIf="mensagemSucesso"
+                    class="mt-4 bg-pink-50 border border-pink-200 text-pink-700 rounded-lg p-4 text-sm">
+
+                    {{ mensagemSucesso }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

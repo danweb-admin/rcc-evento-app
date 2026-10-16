@@ -12,7 +12,7 @@ import { EventoService } from 'src/app/admin/services/eventos.service';
 export class EventoLandingComponent implements OnInit {
   evento: any;
   showModal = false;
-  
+  mostrarConsultaInscricao = false;
   grupos: any[] = [];
   wazeUrl!: SafeResourceUrl;
   menuAberto = false;
@@ -57,6 +57,14 @@ export class EventoLandingComponent implements OnInit {
   
   fecharModal() {
     this.showModal = false;
+  }
+
+  abrirConsultaInscricao(): void {
+    this.mostrarConsultaInscricao = true;
+  }
+  
+  fecharConsultaInscricao(): void {
+    this.mostrarConsultaInscricao = false;
   }
   
   formatarData(data: string | Date): string | null {

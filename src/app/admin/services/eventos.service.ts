@@ -63,6 +63,13 @@ export class EventoService {
     return this.http.get<any>(`${this.baseUrl}/eventos/verifica-status?codigoInscricao=${codigoInscricao}`);
   }
 
+  consultarInscricao( eventoId: string, cpf: string ): Observable<any> { 
+    debugger
+    return this.http.get( `${this.baseUrl}/eventos/consulta-inscricao`, { 
+      params: { eventoId, cpf } 
+    } ); 
+  } 
+
   save(evento: any): Observable<any>{
     return this.http.post(`${this.baseUrl}/eventos`,evento)
     .pipe(map((resp: any) => {
