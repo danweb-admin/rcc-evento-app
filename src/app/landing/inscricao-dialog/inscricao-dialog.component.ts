@@ -549,10 +549,12 @@ export class InscricaoDialogComponent implements OnInit{
 
         // Define NÃO e desabilita o campo de compra de camiseta
         const comprarCamiseta = this.inscricaoForm.get('comprarcamiseta?');
+        const tamanhoCamiseta = this.inscricaoForm.get('tamanhocamiseta');
 
         if (comprarCamiseta) {
           comprarCamiseta.setValue('NÃO');
           comprarCamiseta.disable();
+          tamanhoCamiseta?.disable();
         }
         
         console.log(this.slug)
