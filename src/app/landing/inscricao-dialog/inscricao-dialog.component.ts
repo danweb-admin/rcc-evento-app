@@ -546,6 +546,14 @@ export class InscricaoDialogComponent implements OnInit{
             )
           );
         });
+
+        // Define NÃO e desabilita o campo de compra de camiseta
+        const comprarCamiseta = this.inscricaoForm.get('comprarcamiseta?');
+
+        if (comprarCamiseta) {
+          comprarCamiseta.setValue('NÃO');
+          comprarCamiseta.disable();
+        }
         
         console.log(this.slug)
         // if (this.slug == 'deus-conosco-2026'){
